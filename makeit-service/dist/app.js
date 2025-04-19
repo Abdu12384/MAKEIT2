@@ -1,0 +1,45 @@
+import express, { urlencoded } from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import cookie_parser from 'cookie-parser';
+import morgan from 'morgan';
+import { conncetMongo } from './frameworks/database/connection/dbConnect.js';
+import 'reflect-metadata';
+import { DependencyInjection } from './frameworks/di/index.js';
+import { AuthRoute } from './frameworks/routes/auth/authRoute.js';
+export class App {
+    app;
+    database;
+    constructor() {
+        dotenv.config();
+        this.app = express();
+        DependencyInjection.registerAll();
+        this.database = new conncetMongo();
+        this.database.connectDB();
+        this.setMiddlewares();
+        this.setRoutes();
+    }
+    setMiddlewares() {
+        this.app.use(cors({
+            origin: process.env.ORIGIN,
+            methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+            allowedHeaders: ["Authorization", "Content-Type"],
+            credentials: true
+        }));
+        this.app.use(cookie_parser());
+        this.app.use(express.json());
+        this.app.use(urlencoded({ extended: true }));
+        this.app.use(morgan('dev'));
+    }
+    setRoutes() {
+        this.app.use('/auth', new AuthRoute().authRoute);
+        // this.app.use('/client', new ClientRoute().clientRoute)
+    }
+    listen() {
+        const port = process.env.PORT || 3000;
+        this.app.listen(port, () => console.log(`server running on ${port}`));
+    }
+}
+const app = new App();
+app.listen();
+//# sourceMappingURL=app.js.map

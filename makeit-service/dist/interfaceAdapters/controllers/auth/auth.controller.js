@@ -1,0 +1,146 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+import { injectable, inject } from "tsyringe";
+import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../../shared/constants.js";
+import { handleErrorResponse } from "../../../shared/utils/error.handler.js";
+import { userSchemas } from "../../../useCases/auth/validation/user-signup.validation.schema.js";
+import { setAuthCookies } from "../../../shared/utils/cookie.helper.js";
+let AuthController = class AuthController {
+    _registerUseCase;
+    _sendOtpEmailUseCase;
+    _varifyOtpUseCase;
+    _loginUseCase;
+    _generateTokenUseCase;
+    _googleUseCase;
+    constructor(_registerUseCase, _sendOtpEmailUseCase, _varifyOtpUseCase, _loginUseCase, _generateTokenUseCase, _googleUseCase) {
+        this._registerUseCase = _registerUseCase;
+        this._sendOtpEmailUseCase = _sendOtpEmailUseCase;
+        this._varifyOtpUseCase = _varifyOtpUseCase;
+        this._loginUseCase = _loginUseCase;
+        this._generateTokenUseCase = _generateTokenUseCase;
+        this._googleUseCase = _googleUseCase;
+    }
+    // ══════════════════════════════════════════════════════════
+    // 📧 Sending OTP to User Email
+    // ══════════════════════════════════════════════════════════
+    async sendOtp(req, res) {
+        try {
+            console.log('otpsend', req.body);
+            const { email } = req.body;
+            console.log('otp sending....');
+            await this._sendOtpEmailUseCase.execute(email);
+            res.status(HTTP_STATUS.OK).json(SUCCESS_MESSAGES.OTP_SEND_SUCCESS);
+        }
+        catch (error) {
+            handleErrorResponse(res, error);
+        }
+    }
+    // ══════════════════════════════════════════════════════════
+    // 📝 Register New User
+    // ══════════════════════════════════════════════════════════
+    async register(req, res) {
+        try {
+            const { formdata, otpString } = req.body;
+            console.log('varifying...', formdata);
+            await this._varifyOtpUseCase.execute(formdata.email, otpString);
+            const { role } = formdata;
+            console.log(role);
+            const schema = userSchemas[role];
+            console.log(schema);
+            if (!schema) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    success: true,
+                    message: ERROR_MESSAGES.INVALID_CREDENTIALS
+                });
+                return;
+            }
+            const validatedData = schema.parse(formdata);
+            const client = await this._registerUseCase.createUsers(validatedData);
+            res.status(HTTP_STATUS.CREATED).json({ message: SUCCESS_MESSAGES.CREATED, data: client });
+        }
+        catch (error) {
+            handleErrorResponse(res, error);
+        }
+    }
+    // ══════════════════════════════════════════════════════════
+    // 🔐 User Login Controller
+    // ══════════════════════════════════════════════════════════
+    async login(req, res) {
+        try {
+            const data = req.body;
+            console.log('user data', data);
+            // const validatedData = loginSchema.parse(data)
+            // if(!validatedData){
+            //   res.status(HTTP_STATUS.BAD_REQUEST).json({
+            //     success:false,
+            //     message: ERROR_MESSAGES.INSUFFICIENT_FUNDS,
+            //   })
+            // }
+            const user = await this._loginUseCase.execute(data);
+            if (!user.userId || !user.email || !user.role) {
+                throw new Error("User ID, email, or role is missing");
+            }
+            const token = await this._generateTokenUseCase.execute(user.userId, user.email, user.role);
+            const accessTokenName = `${user.role}_access_token`;
+            const refreshTokenName = `${user.role}_refresh_token`;
+            setAuthCookies(res, token.accessToken, token.refreshToken, accessTokenName, refreshTokenName);
+            const { password, ...userWihoutPassword } = user;
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
+                user: {
+                    ...userWihoutPassword,
+                }
+            });
+        }
+        catch (error) {
+            handleErrorResponse(res, error);
+        }
+    }
+    // ══════════════════════════════════════════════════════════
+    //  User Google Login Controller
+    // ══════════════════════════════════════════════════════════
+    async authenticateWithGoogle(req, res) {
+        try {
+            const { credential, client_id, role } = req.body;
+            const user = await this._googleUseCase.execute(credential, client_id, role);
+            if (!user.userId || !user.email || !user.role) {
+                throw new Error("User ID, email, or role is missing");
+            }
+            const tokens = await this._generateTokenUseCase.execute(user.userId, user.email, user.role);
+            const accessTokenName = `${user.role}_access_token`;
+            const refreshTokenName = `${user.role}_refresh_token`;
+            setAuthCookies(res, tokens.accessToken, tokens.refreshToken, accessTokenName, refreshTokenName);
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
+                user: user,
+            });
+        }
+        catch (error) {
+            handleErrorResponse(res, error);
+        }
+    }
+};
+AuthController = __decorate([
+    injectable(),
+    __param(0, inject("IClientRegisterUseCase")),
+    __param(1, inject("ISendOtpEmailUseCase")),
+    __param(2, inject("IVerifyOtpEmailUseCase")),
+    __param(3, inject("ILoginUserUseCase")),
+    __param(4, inject("IGenerateTokenUseCase")),
+    __param(5, inject("IGoogleUseCase")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object])
+], AuthController);
+export { AuthController };
+//# sourceMappingURL=auth.controller.js.map
