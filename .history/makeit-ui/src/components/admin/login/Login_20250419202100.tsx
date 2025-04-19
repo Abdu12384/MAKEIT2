@@ -28,7 +28,7 @@ interface FormErrors {
 const initialValues = {
   email: "",
   password: "",
-  role:'admin' as UserRoles
+  role:'vendor' as UserRoles
 }
 
 export function AdminLoginPage() {
@@ -36,7 +36,7 @@ export function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>(initialValues)
   const navigate = useNavigate()
-  const loginMutation = useAdminLoginMutation()
+  const loginMutation = useAdminLoginMutation
   const [formErrors, setFormErrors] = useState<FormErrors>({})
 
   
@@ -66,12 +66,12 @@ export function AdminLoginPage() {
     e.preventDefault()  
     setIsLoading(true)
     try {
-     console.log('usedata',formData)
+     console.log('user data',formData)
     loginMutation.mutate(formData,{
        onSuccess:(data) =>{
         console.log(data)
         window.setTimeout(() => {
-          navigate('/_a/',{replace:true})
+          navigate('/_v/',{replace:true})
         }, 2000);
        },
        onError:(error:any)=>{

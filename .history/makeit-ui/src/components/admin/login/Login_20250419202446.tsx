@@ -28,7 +28,7 @@ interface FormErrors {
 const initialValues = {
   email: "",
   password: "",
-  role:'admin' as UserRoles
+  role:'ad' as UserRoles
 }
 
 export function AdminLoginPage() {
@@ -66,7 +66,7 @@ export function AdminLoginPage() {
     e.preventDefault()  
     setIsLoading(true)
     try {
-     console.log('usedata',formData)
+     console.log('user data',formData)
     loginMutation.mutate(formData,{
        onSuccess:(data) =>{
         console.log(data)

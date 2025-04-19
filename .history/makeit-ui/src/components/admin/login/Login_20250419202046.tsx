@@ -11,7 +11,6 @@ import {  UserRoles } from "@/type/User"
 import toast from "react-hot-toast"
 import { setTimeout } from "timers/promises"
 import { useVendorLoginMutation } from "@/hooks/VendorCustomHooks"
-import { useAdminLoginMutation } from "@/hooks/AdminCustomHooks"
 
 
 interface FormData {
@@ -28,15 +27,15 @@ interface FormErrors {
 const initialValues = {
   email: "",
   password: "",
-  role:'admin' as UserRoles
+  role:'vendor' as UserRoles
 }
 
-export function AdminLoginPage() {
+export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>(initialValues)
   const navigate = useNavigate()
-  const loginMutation = useAdminLoginMutation()
+  const loginMutation = useVendorLoginMutation()
   const [formErrors, setFormErrors] = useState<FormErrors>({})
 
   
@@ -66,12 +65,12 @@ export function AdminLoginPage() {
     e.preventDefault()  
     setIsLoading(true)
     try {
-     console.log('usedata',formData)
+     console.log('user data',formData)
     loginMutation.mutate(formData,{
        onSuccess:(data) =>{
         console.log(data)
         window.setTimeout(() => {
-          navigate('/_a/',{replace:true})
+          navigate('/_v/',{replace:true})
         }, 2000);
        },
        onError:(error:any)=>{
