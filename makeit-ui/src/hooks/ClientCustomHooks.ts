@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { clientCreateAccount, clientGoogleLogin, clientLogin, clientResendOtp, clientSignup } from '@/services/client/clientService';
-import { ILoginData } from '@/type/User';
+import { ILoginData } from '@/types/User';
 import { emit } from 'process';
 
 

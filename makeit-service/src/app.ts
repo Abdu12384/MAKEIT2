@@ -9,6 +9,7 @@ import 'reflect-metadata'
 import { DependencyInjection } from './frameworks/di/index.js'
 import { ClientRoute } from './frameworks/routes/client/clientRoute.js'
 import { AuthRoute } from './frameworks/routes/auth/authRoute.js'
+import { AdminRoute } from './frameworks/routes/admin/adminRoute.js'
 
 export class App {
    private app: Express
@@ -43,6 +44,7 @@ export class App {
       private setRoutes(){
         this.app.use('/auth',new AuthRoute().authRoute)
         // this.app.use('/client', new ClientRoute().clientRoute)
+        this.app.use('/admin',new AdminRoute().adminRoute)
       } 
 
    public listen(){

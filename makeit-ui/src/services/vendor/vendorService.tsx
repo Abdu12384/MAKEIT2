@@ -1,6 +1,6 @@
 import authAxiosInstance from "@/api/auth.axios";
 import vendorAxiosInstance from "@/api/vendor.axios";
-import { ILoginData } from "@/type/User";
+import { ILoginData } from "@/types/User";
 import clodAxios, { isAxiosError } from 'axios'
 import { emit } from "process";
 

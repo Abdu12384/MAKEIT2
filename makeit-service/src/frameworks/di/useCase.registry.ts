@@ -23,6 +23,10 @@ import { IGoogleUseCase } from "../../domain/interface/useCaseInterface/auth/goo
 import { GoogleUseCase } from "../../useCases/auth/google-usecase.js";
 import { SendEmailUseCase } from "../../useCases/common/send-email.usecase.js";
 import { ISendEmailUseCase } from "../../domain/interface/useCaseInterface/common/send-email-usecase.interface.js";
+import { IGetAllUsersUseCase } from "../../domain/interface/useCaseInterface/users/get-all-users-usecase.interface.js";
+import { GetAllUserUseCase } from "../../useCases/users/get-all-users.usecase.js";
+import { IUpdateUserStatusUseCase } from "../../domain/interface/useCaseInterface/users/update-user-status-usecase.interface.js";
+import { UpdateUserStatusUseCase } from "../../useCases/users/update-user-status.usecase.js";
 
 
 
@@ -58,8 +62,14 @@ export class UseCaseRegistry {
       useClass: GoogleUseCase
      })
 
+     container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase",{
+      useClass: GetAllUserUseCase
+     })
 
 
+     container.register<IUpdateUserStatusUseCase>("IUpdateUserStatusUseCase",{
+       useClass: UpdateUserStatusUseCase
+     })
 
    //======================= Register Bycripts =======================//
 

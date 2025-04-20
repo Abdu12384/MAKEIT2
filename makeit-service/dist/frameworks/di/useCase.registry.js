@@ -11,6 +11,8 @@ import { GenerateTokenUseCase } from "../../useCases/auth/genarate-token.usecase
 import { UserExistenceService } from "../../useCases/services/user-existence.service.js";
 import { GoogleUseCase } from "../../useCases/auth/google-usecase.js";
 import { SendEmailUseCase } from "../../useCases/common/send-email.usecase.js";
+import { GetAllUserUseCase } from "../../useCases/users/get-all-users.usecase.js";
+import { UpdateUserStatusUseCase } from "../../useCases/users/update-user-status.usecase.js";
 export class UseCaseRegistry {
     static registerUseCase() {
         // ======================= Auth ==========================//
@@ -34,6 +36,12 @@ export class UseCaseRegistry {
         });
         container.register("IGoogleUseCase", {
             useClass: GoogleUseCase
+        });
+        container.register("IGetAllUsersUseCase", {
+            useClass: GetAllUserUseCase
+        });
+        container.register("IUpdateUserStatusUseCase", {
+            useClass: UpdateUserStatusUseCase
         });
         //======================= Register Bycripts =======================//
         container.register("IPasswordHasher", {

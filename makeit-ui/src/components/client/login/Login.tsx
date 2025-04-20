@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
 import Img1 from '@/assets/images/singupImg.jpeg'
 import { useClientLoginMutation } from "@/hooks/ClientCustomHooks"
-import { ILoginData, UserRoles } from "@/type/User"
+import { ILoginData, UserRoles } from "@/types/User"
 import toast from "react-hot-toast"
 import { setTimeout } from "timers/promises"
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google"

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
 import Img1 from '@/assets/images/singupImg.jpeg'
-import {  UserRoles } from "@/type/User"
+import {  UserRoles } from "@/types/User"
 import toast from "react-hot-toast"
 import { setTimeout } from "timers/promises"
 import { useVendorLoginMutation } from "@/hooks/VendorCustomHooks"

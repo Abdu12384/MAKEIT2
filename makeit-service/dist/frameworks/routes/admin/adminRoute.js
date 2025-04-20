@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { userController } from "../../di/resolver.js";
 export class AdminRoute {
     adminRoute;
     constructor() {
@@ -6,7 +7,8 @@ export class AdminRoute {
         this.setRoute();
     }
     setRoute() {
-        this.adminRoute.get('/vendors', (req, res) => {
+        this.adminRoute.get('/users', (req, res) => {
+            userController.getAllUsers(req, res);
         });
     }
 }

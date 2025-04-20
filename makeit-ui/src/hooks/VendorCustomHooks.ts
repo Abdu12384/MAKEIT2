@@ -1,6 +1,6 @@
 import { clientGoogleLogin } from "@/services/client/clientService";
 import { uploadImageCloudinary, vendorCreateAccount, VendorLogin, vendorSignup } from "@/services/vendor/vendorService";
-import { ILoginData } from "@/type/User";
+import { ILoginData } from "@/types/User";
 import { useMutation } from "@tanstack/react-query";
 
 

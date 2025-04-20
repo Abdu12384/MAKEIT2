@@ -7,6 +7,7 @@ import { conncetMongo } from './frameworks/database/connection/dbConnect.js';
 import 'reflect-metadata';
 import { DependencyInjection } from './frameworks/di/index.js';
 import { AuthRoute } from './frameworks/routes/auth/authRoute.js';
+import { AdminRoute } from './frameworks/routes/admin/adminRoute.js';
 export class App {
     app;
     database;
@@ -34,6 +35,7 @@ export class App {
     setRoutes() {
         this.app.use('/auth', new AuthRoute().authRoute);
         // this.app.use('/client', new ClientRoute().clientRoute)
+        this.app.use('/admin', new AdminRoute().adminRoute);
     }
     listen() {
         const port = process.env.PORT || 3000;

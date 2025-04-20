@@ -1,6 +1,6 @@
 import authAxiosInstance from "@/api/auth.axios";
 import clientAxiosInstance from "@/api/client.axios";
-import { ILoginData } from "@/type/User";
+import { ILoginData } from "@/types/User";
 import axios, { isAxiosError } from "axios";
 import { LogIn } from "lucide-react";
 
