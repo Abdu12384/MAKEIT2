@@ -1,48 +1,58 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const BACKEND_URL: string = import.meta.env.VITE_BACKEND_URL;
 
-interface RefreshTokenResponse {
-  accessToken: string;
-}
+import axios from "axios";
+import toast from "react-hot-toast";
+// import { store } from "@/store/store";
+// import { barberLogout } from "@/store/slices/barber.slice";
 
-const vendorAxiosInstance: AxiosInstance = axios.create({
-  baseURL: `${BACKEND_URL}/vendor`,
-  withCredentials: true,
+export const VendorAxiosInstance = axios.create({
+	baseURL: import.meta.env.VITE_BACKEND_URL + "/vendor",
+	withCredentials: true,
 });
 
-// Response interceptor for token refresh
-vendorAxiosInstance.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => response,
-  async (error: AxiosError): Promise<AxiosResponse | Promise<never>> => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+let isRefreshing = false;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
+VendorAxiosInstance.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
 
-      try {
-        const refreshResponse = await axios.post<RefreshTokenResponse>(
-          `${BACKEND_URL}/vendor/auth/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
+		if (error.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+			if (!isRefreshing) {
+				isRefreshing = true;
+				try {
+					await VendorAxiosInstance.post("/barber/refresh-token");
+					isRefreshing = false;
+					return VendorAxiosInstance(originalRequest);
+				} catch (refreshError) {
+					isRefreshing = false;
 
-        const newAccessToken = refreshResponse.data.accessToken;
+					// store.dispatch(barberLogout());
 
-        vendorAxiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        if (originalRequest.headers) {
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        }
+					window.location.href = "/";
+					toast("Please login again");
+					return Promise.reject(refreshError);
+				}
+			}
+		}
 
-        return vendorAxiosInstance(originalRequest);
-      } catch (refreshError) {
-        console.error('🔁 Vendor token refresh failed:', refreshError);
-        return Promise.reject(refreshError);
-      }
-    }
+		if (
+			(error.response.status === 403 &&
+				error.response.data.message === "Token is blacklisted") ||
+			(error.response.status === 403 &&
+				error.response.data.message ===
+					"Access denied: Your account has been blocked" &&
+				!originalRequest._retry)
+		) {
+			console.log("Session ended");
+			// store.dispatch(barberLogout())
 
-    return Promise.reject(error);
-  }
-);
+			window.location.href = "/barber";
+			toast("Please login again");
+			return Promise.reject(error);
+		}
 
-export default vendorAxiosInstance;
+		return Promise.reject(error);
+	}
+)

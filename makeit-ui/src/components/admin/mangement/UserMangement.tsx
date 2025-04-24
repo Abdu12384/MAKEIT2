@@ -2,9 +2,11 @@ import { useState } from "react"
 import { useGetAllUsers } from "@/hooks/AdminCustomHooks"
 import type React from "react"
 import { motion } from "framer-motion"
-import { Search, UserPlus, Filter, MoreVertical } from 'lucide-react'
+import { Search, UserPlus, Filter, MoreVertical, Ban, CheckCircle } from 'lucide-react'
 import { Pagination1 } from "@/components/common/paginations/Pagination"
 import { IClient } from "@/types/User"
+import { Button } from "@/components/ui/button"
+import { ConfirmationButton } from "@/components/common/customButtons/ConfirmButton"
 
 
 interface ClientManagementProps {
@@ -16,7 +18,7 @@ interface ClientManagementProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onPageChange: (page: number) => void;
-  // onStatusUpdate: (userId: string) => Promise<void>;
+  onStatusUpdate: (userId: string) => Promise<void>;
 }
 export const ClientManagementComponent: React.FC<ClientManagementProps> = ({
   clients,
@@ -27,7 +29,7 @@ export const ClientManagementComponent: React.FC<ClientManagementProps> = ({
   searchQuery,
   onSearchChange,
   onPageChange,
-  // onStatusUpdate,
+  onStatusUpdate,
 }) => {
   console.log(clients)
   return (
@@ -82,25 +84,42 @@ export const ClientManagementComponent: React.FC<ClientManagementProps> = ({
               </tr>
             </thead>
             <tbody className="text-sm">
-              {clients.map((user) => (
-                <tr key={user?.userId} className="border-b border-gray-700">
-                  <td className="py-3">{user.name}</td>
-                  <td className="py-3">{user.email}</td>
-                  <td className="py-3">{user.role}</td>
+              {clients.map((client) => (
+                <tr key={client?.userId} className="border-b border-gray-700">
+                  <td className="py-3">{client.name}</td>
+                  <td className="py-3">{client.email}</td>
+                  <td className="py-3">{client.role}</td>
                   <td className="py-3">
                     <span className={`px-2 py-1 rounded-full text-xs ${
-                      user.status === "active" 
+                      client.status === "active" 
                       ? "bg-green-500/10 text-green-500" 
                       : "bg-red-500/10 text-red-500"
                       }`}>
-                      {user.status}
+                      {client.status}
                     </span>
                   </td>
-                  <td className="py-3">{user.events}</td>
+                  <td className="py-3">{client?.events}</td>
                   <td className="py-3">
-                    <button className="p-1 hover:bg-gray-700 rounded-md transition-colors">
-                      <MoreVertical size={16} />
-                    </button>
+                  <ConfirmationButton
+                      buttonText={client.status === "active" ? "Active" : "Blocked"}
+                      buttonIcon={ client.status === "active" ? (
+                        <CheckCircle className="h-6 w-6 text-green-500" />
+                      ) : (
+                        <Ban className="h-6 w-6 text-red-500" />
+                      )}
+                      buttonType={client.status === "active" ? "danger" : "success"}
+                      confirmTitle={`Confirm ${client.status === "active" ? "Block" : "Activate"} Client`}
+                      confirmMessage={`Are you sure you want to ${
+                        client.status === "active" ? "block" : "activate"
+                      } this client?`}
+                      confirmText={client.status === "active" ? "Block" : "Activate"}
+                      onConfirm={() => onStatusUpdate(client.userId as string)}
+                      buttonClassName={
+                        client.status === "active"
+                          ? "bg-green-50 text-green-600 hover:bg-green-100 cursor-pointer border-green-200"
+                          : "bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-red-200"
+                      }
+                    />
                   </td>
                 </tr>
               ))}

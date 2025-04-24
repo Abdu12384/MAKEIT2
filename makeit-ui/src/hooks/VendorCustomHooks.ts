@@ -1,5 +1,5 @@
 import { clientGoogleLogin } from "@/services/client/clientService";
-import { uploadImageCloudinary, vendorCreateAccount, VendorLogin, vendorSignup } from "@/services/vendor/vendorService";
+import { logoutVendor, uploadImageCloudinary, vendorCreateAccount, VendorLogin, vendorSignup } from "@/services/vendor/vendorService";
 import { ILoginData } from "@/types/User";
 import { useMutation } from "@tanstack/react-query";
 
@@ -63,6 +63,12 @@ export const useVendorLoginMutation = () =>{
 
 
 
+
+export const useLogoutVendor = () => {
+  return useMutation({
+    mutationFn: logoutVendor,
+  });
+};
 
 
 

@@ -8,12 +8,15 @@ import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
 import Img1 from '@/assets/images/singupImg.jpeg'
 import { useClientLoginMutation } from "@/hooks/ClientCustomHooks"
-import { ILoginData, UserRoles } from "@/types/User"
+import { IClient, ILoginData, UserRoles } from "@/types/User"
 import toast from "react-hot-toast"
 import { setTimeout } from "timers/promises"
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google"
 import { jwtDecode } from 'jwt-decode';
 import { useClientGoogleLoginMutation } from "@/hooks/ClientCustomHooks"
+import { useDispatch } from "react-redux"
+import { clientLogin } from "@/store/slices/client.slice"
+
 
 
 interface FormData {
@@ -56,7 +59,7 @@ export function LoginComponent() {
   const navigate = useNavigate()
   const loginMutation = useClientLoginMutation()
   const googleLoginMutation = useClientGoogleLoginMutation()
-  
+  const dispatch = useDispatch()
   
 
 
@@ -91,8 +94,11 @@ export function LoginComponent() {
             client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
             role: "client",
           },{
-             onSuccess: () =>{
+             onSuccess: (data) =>{
                 console.log('login sucess')
+                window.setTimeout(() => {
+                  dispatch(clientLogin(data.user as IClient))
+                }, 2000);
              },
              onError: (error) => {
                 console.log('signup error',error)
@@ -116,13 +122,14 @@ export function LoginComponent() {
     try {
      console.log('user data',formData)
     loginMutation.mutate(formData,{
-       onSuccess:() =>{
+       onSuccess:(data) =>{
         window.setTimeout(() => {
-          navigate('/',{replace:true})
-        }, 2000);
+          dispatch(clientLogin(data.user as IClient))
+        }, 3000);
        },
        onError:(error:any)=>{
         toast.error(error?.response?.data?.message)
+        console.log(error,'hrere')
         setIsLoading(false)
        }
 

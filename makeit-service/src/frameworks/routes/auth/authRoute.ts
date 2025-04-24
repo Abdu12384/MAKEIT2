@@ -1,5 +1,5 @@
 import { Request,Response,Router } from "express";
-import { ClientAuthController } from "../../di/resolver.js";
+import { authController} from "../../di/resolver.js";
 
 
 
@@ -15,21 +15,21 @@ export class AuthRoute {
 
 
           this.authRoute.post('/signup', (req: Request, res:Response) => 
-            ClientAuthController.register(req,res)
+            authController.register(req,res)
            )
 
 
           this.authRoute.post('/send-otp',(req: Request, res:Response) =>  
-             ClientAuthController.sendOtp(req,res)
+            authController.sendOtp(req,res)
            )
 
 
            this.authRoute.post('/login',(req:Request,res:Response) =>
-             ClientAuthController.login(req,res)
+            authController.login(req,res)
           )
 
           this.authRoute.post('/google-auth',(req:Request,res:Response) =>
-             ClientAuthController.authenticateWithGoogle(req,res)
+            authController.authenticateWithGoogle(req,res)
            )
 
 

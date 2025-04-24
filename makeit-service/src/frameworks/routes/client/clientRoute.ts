@@ -1,5 +1,6 @@
-import { Request,Response,Router } from "express";
-import { ClientAuthController } from "../../di/resolver.js";
+import { Request,RequestHandler,Response,Router } from "express";
+import { authController, blockStatusMiddleware} from "../../di/resolver.js";
+import { authorizeRole, decodeToken, verifyAuth } from "../../../interfaceAdapters/middlewares/auth.middleware.js";
 
 
 
@@ -14,21 +15,33 @@ export class ClientRoute {
       private setRoute(): void{
 
 
-          this.clientRoute.post('/signup', (req: Request, res:Response) => 
-            ClientAuthController.register(req,res)
-           )
+
+           // logout
+          this.clientRoute.post('/client/logout',
+            verifyAuth,
+            // authorizeRole(["client"])
+            blockStatusMiddleware.checkStatus as RequestHandler,
+            (req: Request,res:Response) =>{
+             authController.logout(req, res)
+          })
 
 
-          this.clientRoute.post('/send-otp',(req: Request, res:Response) =>  
-             ClientAuthController.sendOtp(req,res)
-           )
+          this.clientRoute.post( "/client/refresh-token",
+            decodeToken,
+            (req: Request, res: Response) => {
+              console.log("refreshing client", req.body);
+              authController.handleTokenRefresh(req, res);
+            }
+          );
+
+          this.clientRoute.post('/client/refresh-token',
+            decodeToken,
+            (req:Request, res:Response) =>{
+              console.log("refreshing Admin",req.body)
+              authController.handleTokenRefresh(req, res)
+           })
+           
 
 
-           this.clientRoute.post('/login',(req:Request,res:Response) =>
-             ClientAuthController.login(req,res)
-          )
-
-
-   }
-
+        }
 }

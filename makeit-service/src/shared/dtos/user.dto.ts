@@ -27,6 +27,7 @@ export interface VendorDTO {
    email: string;
    phone?: string;
    password: string
+   vendorStatus?:string
    idProof: string;
    role:"vendor"
 }

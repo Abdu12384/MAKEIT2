@@ -11,6 +11,8 @@ import { IAdminRepository } from '../../domain/interface/repositoryInterfaces/us
 import { AdminRepository } from '../../interfaceAdapters/repository/users/admin.repository.js';
 import { IRefreshTokenReposiory } from '../../domain/interface/repositoryInterfaces/services/refresh-token.entity.js';
 import { RefreshTokenRepository } from '../../interfaceAdapters/repository/authService-repository/refresh-token.repository.js';
+import { IRedisTokenRepository } from '../../domain/interface/repositoryInterfaces/redis/redis-token-repository.interface.js';
+import { RedisTokenRepository } from '../../interfaceAdapters/repository/redis/redis-token.repository.js';
 
 
 export class RepositoryRegistry {
@@ -35,6 +37,11 @@ export class RepositoryRegistry {
       container.register<IRefreshTokenReposiory>("IRefreshTokenReposiory",{
          useClass: RefreshTokenRepository
       })
+
+      container.register<IRedisTokenRepository>("IRedisTokenRepository",{
+         useClass: RedisTokenRepository
+      })
+
 
 
    }

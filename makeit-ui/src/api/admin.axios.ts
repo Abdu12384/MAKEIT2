@@ -1,53 +1,63 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
 
-const BACKEND_URL: string = import.meta.env.VITE_BACKEND_URL;
 
-interface RefreshTokenResponse {
-  accessToken: string;
-}
 
-const adminAxiosInstance: AxiosInstance = axios.create({
-  baseURL: `${BACKEND_URL}/admin`,
-  withCredentials: true,
+import axios from "axios";
+import toast from "react-hot-toast";
+// import { store } from "@/store/store";
+// import { adminLogout } from "@/store/slices/admin.slice";
+
+export const adminAxiosInstance = axios.create({
+	baseURL: import.meta.env.VITE_BACKEND_URL + "/admin",
+	withCredentials: true,
 });
 
-// Response interceptor for handling token refresh
+let isRefreshing = false;
+
 adminAxiosInstance.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => response,
-  async (error: AxiosError): Promise<AxiosResponse | Promise<never>> => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
+		if (
+			error.response?.status === 401 &&
+			// error.response.data.message === "Token Expired" &&
+			!originalRequest._retry
+		) {
+			originalRequest._retry = true;
+			if (!isRefreshing) {
+				isRefreshing = true;
+				try {
+					await adminAxiosInstance.post("/admin/refresh-token");
+					isRefreshing = false;
+					return adminAxiosInstance(originalRequest);
+				} catch (refreshError) {
+					isRefreshing = false;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
+					// store.dispatch(adminLogout());
 
-      try {
-        const refreshResponse = await axios.post<RefreshTokenResponse>(
-          `${BACKEND_URL}/admin/auth/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
+					// window.location.href = "/admin";
+					// toast("Please login again");
+					return Promise.reject(refreshError);
+				}
+			}
+		}
+		if (
+			(error.response.status === 401 &&
+				error.response.data.message === "Invalid token") ||
+			(error.response.status === 403 &&
+				error.response.data.message === "Token is blacklisted") ||
+			(error.response.status === 403 &&
+				error.response.data.message ===
+					"Access denied: Your account has been blocked" &&
+				!originalRequest._retry)
+		) {
+			console.log("Session ended");
+			// store.dispatch(adminLogout());
 
-        const newAccessToken = refreshResponse.data.accessToken;
+			// window.location.href = "/admin";
+			// toast("Please login again");
+			return Promise.reject(error);
+		}
 
-        adminAxiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        if (originalRequest.headers) {
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        }
-
-        return adminAxiosInstance(originalRequest);
-      } catch (refreshError) {
-        console.error('🔁 Admin token refresh failed:', refreshError);
-        return Promise.reject(refreshError);
-      }
-    }
-
-    return Promise.reject(error);
-  }
+		return Promise.reject(error);
+	}
 );
-
-export default adminAxiosInstance;

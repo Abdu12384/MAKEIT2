@@ -1,12 +1,11 @@
-"use client"
-
 import { useRef, useState, useEffect } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useMediaQuery } from "@/hooks/media-query/use-media-query"
-
+import bgIMG from '@/assets/images/servicebackround.jpg'
+import bgIMG2 from '@/assets/images/servicebg.webp'
 const services = [
   {
     title: "Event Planning",
@@ -93,7 +92,7 @@ export default function Services() {
       <motion.div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url('/placeholder.svg?height=1000&width=1000')`,
+          backgroundImage: `url(${bgIMG2})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           scale,
@@ -103,7 +102,7 @@ export default function Services() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-white/90 z-0"></div>
+      <div className="absolute inset-0  z-0"></div>
 
       <div className=" px-4 md:px-6 relative z-10">
         <motion.div

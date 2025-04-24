@@ -1,48 +1,57 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const BACKEND_URL: string = import.meta.env.VITE_BACKEND_URL;
+import axios from "axios";
+import toast from "react-hot-toast";
+// import { store } from "@/store/store";
+// import { clientLogout } from "@/store/slices/client.slice";
 
-interface RefreshTokenResponse {
-  accessToken: string;
-}
-
-const clientAxiosInstance: AxiosInstance = axios.create({
-  baseURL: `${BACKEND_URL}/client`,
-  withCredentials: true,
+export const clientAxiosInstance = axios.create({
+	baseURL: import.meta.env.VITE_BACKEND_URL + "/client",
+	withCredentials: true,
 });
 
-// Response interceptor for handling token refresh
+let isRefreshing = false;
+
 clientAxiosInstance.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => response,
-  async (error: AxiosError): Promise<AxiosResponse | Promise<never>> => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
+		if (error.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+			if (!isRefreshing) {
+				isRefreshing = true;
+				try {
+					await clientAxiosInstance.post("/client/refresh-token");
+					isRefreshing = false;
+					return clientAxiosInstance(originalRequest);
+				} catch (refreshError) {
+					isRefreshing = false;
 
-      try {
-        const refreshResponse = await axios.post<RefreshTokenResponse>(
-          `${BACKEND_URL}/client/auth/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
+					// store.dispatch(clientLogout());
 
-        const newAccessToken = refreshResponse.data.accessToken;
+					// window.location.href = "/";
+					toast("Please login again");
+					return Promise.reject(refreshError);
+				}
+			}
+		}
 
-        clientAxiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        if (originalRequest.headers) {
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        }
+		if (
+			(error.response.status === 403 &&
+				error.response.data.message === "Token is blacklisted") ||
+			(error.response.status === 403 &&
+				error.response.data.message ===
+					"Access denied: Your account has been blocked" &&
+				!originalRequest._retry)
+		) {
+			console.log("Session ended");
+			// store.dispatch(clientLogout());
 
-        return clientAxiosInstance(originalRequest);
-      } catch (refreshError) {
-        console.error('🔁 Token refresh failed:', refreshError);
-        return Promise.reject(refreshError);
-      }
-    }
+			window.location.href = "/";
+			toast("Please login again");
+			return Promise.reject(error);
+		}
 
-    return Promise.reject(error);
-  }
+		return Promise.reject(error);
+	}
 );
-
-export default clientAxiosInstance;

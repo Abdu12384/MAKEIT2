@@ -5,6 +5,7 @@ import { OtpRepositroy } from '../../interfaceAdapters/repository/authService-re
 import { VendorRepository } from '../../interfaceAdapters/repository/users/vendor.repository.js';
 import { AdminRepository } from '../../interfaceAdapters/repository/users/admin.repository.js';
 import { RefreshTokenRepository } from '../../interfaceAdapters/repository/authService-repository/refresh-token.repository.js';
+import { RedisTokenRepository } from '../../interfaceAdapters/repository/redis/redis-token.repository.js';
 export class RepositoryRegistry {
     static registerRepositories() {
         container.register('IClientRepository', {
@@ -21,6 +22,9 @@ export class RepositoryRegistry {
         });
         container.register("IRefreshTokenReposiory", {
             useClass: RefreshTokenRepository
+        });
+        container.register("IRedisTokenRepository", {
+            useClass: RedisTokenRepository
         });
     }
 }

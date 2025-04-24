@@ -14,7 +14,7 @@ import { injectable, inject } from "tsyringe";
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../../shared/constants.js";
 import { handleErrorResponse } from "../../../shared/utils/error.handler.js";
 import { userSchemas } from "../../../useCases/auth/validation/user-signup.validation.schema.js";
-import { setAuthCookies } from "../../../shared/utils/cookie.helper.js";
+import { clearAuthCookies, setAuthCookies, updateCookieWithAccessToken } from "../../../shared/utils/cookie.helper.js";
 let AuthController = class AuthController {
     _registerUseCase;
     _sendOtpEmailUseCase;
@@ -22,13 +22,19 @@ let AuthController = class AuthController {
     _loginUseCase;
     _generateTokenUseCase;
     _googleUseCase;
-    constructor(_registerUseCase, _sendOtpEmailUseCase, _varifyOtpUseCase, _loginUseCase, _generateTokenUseCase, _googleUseCase) {
+    _refreshTokenUseCase;
+    _blackListTokenUseCase;
+    _revokeRefreshTokenUseCase;
+    constructor(_registerUseCase, _sendOtpEmailUseCase, _varifyOtpUseCase, _loginUseCase, _generateTokenUseCase, _googleUseCase, _refreshTokenUseCase, _blackListTokenUseCase, _revokeRefreshTokenUseCase) {
         this._registerUseCase = _registerUseCase;
         this._sendOtpEmailUseCase = _sendOtpEmailUseCase;
         this._varifyOtpUseCase = _varifyOtpUseCase;
         this._loginUseCase = _loginUseCase;
         this._generateTokenUseCase = _generateTokenUseCase;
         this._googleUseCase = _googleUseCase;
+        this._refreshTokenUseCase = _refreshTokenUseCase;
+        this._blackListTokenUseCase = _blackListTokenUseCase;
+        this._revokeRefreshTokenUseCase = _revokeRefreshTokenUseCase;
     }
     // ══════════════════════════════════════════════════════════
     // 📧 Sending OTP to User Email
@@ -131,6 +137,48 @@ let AuthController = class AuthController {
             handleErrorResponse(res, error);
         }
     }
+    // ══════════════════════════════════════════════════════════
+    //  User Logout
+    // ══════════════════════════════════════════════════════════
+    async logout(req, res) {
+        try {
+            await this._blackListTokenUseCase.execute(req.user.access_token);
+            await this._revokeRefreshTokenUseCase.execute(req.user.refresh_token);
+            const user = req.user;
+            console.log(user, 'logout user');
+            const accessTokenName = `${user.role}_access_token`;
+            const refreshTokenName = `${user.role}_refresh_token`;
+            clearAuthCookies(res, accessTokenName, refreshTokenName);
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: SUCCESS_MESSAGES.LOGOUT_SUCCESS,
+            });
+        }
+        catch (error) {
+            handleErrorResponse(res, error);
+        }
+    }
+    // ══════════════════════════════════════════════════════════
+    //  Token Refresh Handler
+    // ══════════════════════════════════════════════════════════
+    handleTokenRefresh(req, res) {
+        try {
+            const refreshToken = req.user.refresh_token;
+            const newTokens = this._refreshTokenUseCase.execute(refreshToken);
+            const accessTokenName = `${newTokens.role}_access_token`;
+            updateCookieWithAccessToken(res, newTokens.accessToken, accessTokenName);
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: SUCCESS_MESSAGES.OPERATION_SUCCESS
+            });
+        }
+        catch (error) {
+            clearAuthCookies(res, `${req.user.role}_access_token`, `${req.user.role}_refresh_token`);
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({
+                message: ERROR_MESSAGES.INVALID_TOKEN
+            });
+        }
+    }
 };
 AuthController = __decorate([
     injectable(),
@@ -140,7 +188,10 @@ AuthController = __decorate([
     __param(3, inject("ILoginUserUseCase")),
     __param(4, inject("IGenerateTokenUseCase")),
     __param(5, inject("IGoogleUseCase")),
-    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object])
+    __param(6, inject("IRefreshTokenUseCase")),
+    __param(7, inject("IBlackListTokenUseCase")),
+    __param(8, inject("IRevokeRefreshTokenUseCase")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object, Object, Object, Object, Object])
 ], AuthController);
 export { AuthController };
 //# sourceMappingURL=auth.controller.js.map

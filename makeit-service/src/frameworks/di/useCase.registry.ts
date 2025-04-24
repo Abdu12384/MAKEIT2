@@ -27,6 +27,19 @@ import { IGetAllUsersUseCase } from "../../domain/interface/useCaseInterface/use
 import { GetAllUserUseCase } from "../../useCases/users/get-all-users.usecase.js";
 import { IUpdateUserStatusUseCase } from "../../domain/interface/useCaseInterface/users/update-user-status-usecase.interface.js";
 import { UpdateUserStatusUseCase } from "../../useCases/users/update-user-status.usecase.js";
+import { IGetAllVendorUseCase } from "../../domain/interface/useCaseInterface/vendor/get-all-vendor-usecase.interface.js";
+import { GetAllVendorUseCase } from "../../useCases/vendor/get-all-vendor-usecase.js";
+import { IUpdateVendorStatusUseCase } from "../../domain/interface/useCaseInterface/vendor/update-vendor-status-usecase.interface.js";
+import { UpdateVendorStatusUseCase } from "../../useCases/vendor/update-vendor-status.usecase.js";
+import { IRefreshTokenUseCase } from "../../domain/interface/useCaseInterface/auth/refresh-token-usecase.interface.js";
+import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase.js";
+import { IGetUserDetailsUseCase } from "../../domain/interface/useCaseInterface/users/get-user-details-usecase.interface.js";
+import { GetUserDetailsUseCase } from "../../useCases/users/get-user-details.usecase.js";
+import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase.js";
+import { IBlackListTokenUseCase } from "../../domain/interface/useCaseInterface/auth/blacklist-token-usecase.interface.js";
+import { constants } from "buffer";
+import { IRevokeRefreshTokenUseCase } from "../../domain/interface/useCaseInterface/auth/revok-refresh-token-usecase.interface.js";
+import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase.js";
 
 
 
@@ -71,6 +84,29 @@ export class UseCaseRegistry {
        useClass: UpdateUserStatusUseCase
      })
 
+     container.register<IGetAllVendorUseCase>("IGetAllVendorUseCase",{
+      useClass: GetAllVendorUseCase
+     })
+
+
+     container.register<IUpdateVendorStatusUseCase>("IUpdateVendorStatusUseCase",{
+      useClass: UpdateVendorStatusUseCase
+     })
+
+
+     container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase",{
+      useClass: GetUserDetailsUseCase
+     })
+
+     container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase",{
+      useClass: BlackListTokenUseCase
+     })
+
+
+     container.register<IRevokeRefreshTokenUseCase>("IRevokeRefreshTokenUseCase",{
+      useClass: RevokeRefreshTokenUseCase
+     })
+
    //======================= Register Bycripts =======================//
 
      container.register<IPasswordHasher>("IPasswordHasher",{
@@ -100,6 +136,10 @@ export class UseCaseRegistry {
 
     container.register<ISendEmailUseCase>("ISendEmailUseCase",{
       useClass: SendEmailUseCase
+    })
+
+    container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase",{
+       useClass: RefreshTokenUseCase
     })
 
   

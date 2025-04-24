@@ -2,26 +2,30 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import clientHomIMG1 from '@/assets/images/client-home-img1.jpg'
+import clientHomIMG2 from '@/assets/images/client-home-img2.jpg'
+import clientHomIMG3 from '@/assets/images/client-home-img3.jpg'
 import { Button } from "@/components/ui/button"
+import { Navbar } from "./NavBar"
 
 const slides = [
   {
     title: "CONNECT",
     subtitle: "AND DISCOVER",
     description: "Find the perfect vendor for your next event with our curated marketplace",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: clientHomIMG1,
   },
   {
     title: "CREATE",
     subtitle: "AND CELEBRATE",
     description: "Browse through upcoming events and secure your spot today",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: clientHomIMG2,
   },
   {
     title: "EXPLORE",
     subtitle: "AND EXPERIENCE",
     description: "Access top-tier vendors and service providers all in one place",
-    image: "/placeholder.svg?height=600&width=1200",
+    image: clientHomIMG3,
   },
 ]
 
@@ -60,8 +64,12 @@ export default function Banner() {
   }, [current, isAnimating])
 
   return (
-    <section ref={bannerRef} className="relative h-[80vh] overflow-hidden bg-[#124E66]">
-      <AnimatePresence mode="wait">
+    <>
+    <section ref={bannerRef} className="relative h-[80vh] overflow-hidden bg-[#124E66] ">
+    <div className="absolute top-0 left-0 w-full z-20">
+    <Navbar />
+  </div>
+      <AnimatePresence mode="popLayout">
         {slides.map(
           (slide, index) =>
             index === current && (
@@ -76,7 +84,7 @@ export default function Banner() {
                 <motion.div
                   className="absolute inset-0"
                   style={{
-                    backgroundImage: `linear-gradient(rgba(18, 78, 102, 0.7), rgba(18, 78, 102, 0.7)), url(${slide.image})`,
+                    backgroundImage: `url(${slide.image})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     y: backgroundY,
@@ -186,5 +194,6 @@ export default function Banner() {
         </motion.div>
       </motion.div>
     </section>
+    </>
   )
 }

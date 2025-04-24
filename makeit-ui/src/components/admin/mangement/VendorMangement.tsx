@@ -1,8 +1,10 @@
 import type React from "react"
 import { motion } from "framer-motion"
-import { Search, Store, Filter, MoreVertical } from 'lucide-react'
+import { Search, Store, Filter, MoreVertical, Send, CheckCircle, Ban } from 'lucide-react'
 import { IVendor } from "@/types/User"
 import { Pagination1 } from "@/components/common/paginations/Pagination"
+import { Button } from "@/components/ui/button"
+import { ConfirmationButton } from "@/components/common/customButtons/ConfirmButton"
 
 
 interface AdminVendorManagementProps {
@@ -14,7 +16,7 @@ interface AdminVendorManagementProps {
   searchQuery: string
   onSearchChange: (query: string) => void
   onPageChange: (page: number) => void
-  // onStatusUpdate: (vendorId: number) => void
+  onStatusUpdate: (userId: string) => Promise<void>;
 }
 
 export const VendorManagementComponent: React.FC<AdminVendorManagementProps> = ({
@@ -26,7 +28,7 @@ export const VendorManagementComponent: React.FC<AdminVendorManagementProps> = (
   searchQuery,
   onSearchChange,
   onPageChange,
-  // onStatusUpdate,
+  onStatusUpdate,
 }) => {
  console.log(vendor)
 
@@ -39,10 +41,10 @@ export const VendorManagementComponent: React.FC<AdminVendorManagementProps> = (
     >
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Vendor Management</h1>
-        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center text-sm transition-colors">
+        {/* <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center text-sm transition-colors">
           <Store size={16} className="mr-2" />
           Add Vendor
-        </button>
+        </button> */}
       </div>
 
       <div className="bg-gray-800 rounded-xl p-6">
@@ -57,6 +59,16 @@ export const VendorManagementComponent: React.FC<AdminVendorManagementProps> = (
               className="bg-transparent border-none w-full ml-2 focus:outline-none"
             />
           </div>
+         {/* <button className="flex items-center bg-gray-700/50 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm transition-colors relative">
+              <Send size={16} className="mr-2" />
+              <span className="flex items-center gap-1">
+                Request
+                <span className="bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  3 
+                </span>
+              </span>
+            </button> */}
+
           <button className="flex items-center bg-gray-700/50 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm transition-colors">
             <Filter size={16} className="mr-2" />
             Filter
@@ -98,9 +110,26 @@ export const VendorManagementComponent: React.FC<AdminVendorManagementProps> = (
                     </span>
                   </td>
                   <td className="py-3">
-                    <button className="p-1 hover:bg-gray-700 rounded-md transition-colors">
-                      <MoreVertical size={16} />
-                    </button>
+                  <ConfirmationButton
+                      buttonText={vendor.status === "active" ? "Active" : "Blocked"}
+                      buttonIcon={ vendor.status === "active" ? (
+                        <CheckCircle className="h-6 w-6 text-green-500" />
+                      ) : (
+                        <Ban className="h-6 w-6 text-red-500" />
+                      )}
+                      buttonType={vendor.status === "active" ? "danger" : "success"}
+                      confirmTitle={`Confirm ${vendor.status === "active" ? "Block" : "Activate"} Client`}
+                      confirmMessage={`Are you sure you want to ${
+                        vendor.status === "active" ? "block" : "activate"
+                      } this client?`}
+                      confirmText={vendor.status === "active" ? "Block" : "Activate"}
+                      onConfirm={() => onStatusUpdate(vendor.userId as string)}
+                      buttonClassName={
+                        vendor.status === "active"
+                          ? "bg-green-50 text-green-600 hover:bg-green-100 cursor-pointer border-green-200"
+                          : "bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-red-200"
+                      }
+                    />
                   </td>
                 </tr>
               ))}

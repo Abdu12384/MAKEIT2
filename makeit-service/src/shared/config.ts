@@ -17,5 +17,13 @@ export const config = {
 		RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN || "5m",
 	},
 
+
+	redis: {
+		REDIS_USERNAME: process.env.REDIS_USERNAME || "default",
+		REDIS_PASS: process.env.REDIS_PASS,
+		REDIS_HOST: process.env.REDIS_HOST,
+		REDIS_PORT: process.env.REDIS_PORT || "14402" 
+	}
+
      
 }

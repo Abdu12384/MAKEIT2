@@ -1,5 +1,6 @@
 import authAxiosInstance from "@/api/auth.axios";
-import vendorAxiosInstance from "@/api/vendor.axios";
+import { VendorAxiosInstance } from "@/api/vendor.axios";
+import { IAuthResponse, IAxiosResponse } from "@/types/response";
 import { ILoginData } from "@/types/User";
 import clodAxios, { isAxiosError } from 'axios'
 import { emit } from "process";
@@ -14,6 +15,13 @@ interface VendorData {
    idProof: string;
 }
 
+
+export const refreshVendorSession = async (): Promise<IAuthResponse> => {
+   const response = await VendorAxiosInstance.get<IAuthResponse>(
+     "/vendor/refresh-session"
+   );
+   return response.data;
+ };
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dujuwqvz5/image/upload";
 
@@ -62,6 +70,15 @@ export const VendorLogin = async (user: ILoginData) =>{
        throw error
     }
 }
+
+
+
+
+
+export const logoutVendor = async (): Promise<IAxiosResponse> => {
+   const response = await VendorAxiosInstance.post("/vendor/logout");
+   return response.data;
+};
 
 
 

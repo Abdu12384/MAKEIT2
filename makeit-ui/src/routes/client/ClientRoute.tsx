@@ -1,6 +1,7 @@
 import { LoginComponent } from "@/components/client/login/Login"
 import { SignupComponent } from "@/components/client/signup/Signup"
 import ClientHome from "@/pages/client/home-page"
+import { NoAuthRoute } from "@/utils/protected/PublicRoute"
 import { Routes, Route } from "react-router-dom"
 
 
@@ -8,11 +9,14 @@ import { Routes, Route } from "react-router-dom"
    
      return (
         <Routes> 
-           
-          <Route path="/signup" element={<SignupComponent/>}/>
-          <Route path="/login" element={<LoginComponent/>}/>
-          
           <Route path="/" element={<ClientHome/>}/>
+           
+          <Route path="/signup" element={<NoAuthRoute element={<SignupComponent />} />} />
+          <Route path="/login" element={<NoAuthRoute element={<LoginComponent />} />} />
+
+          
+          
+
         </Routes>
             
            

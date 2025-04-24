@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { clientCreateAccount, clientGoogleLogin, clientLogin, clientResendOtp, clientSignup } from '@/services/client/clientService';
+import { clientCreateAccount, clientGoogleLogin, clientLogin, clientResendOtp, clientSignup, logoutClient } from '@/services/client/clientService';
 import { ILoginData } from '@/types/User';
 import { emit } from 'process';
 
@@ -63,3 +63,13 @@ export const useResendOtpClientMutaion = () => {
      mutationFn: (email: string) => clientResendOtp(email)
    })
 }
+
+
+
+
+
+export const useLogoutClient = () => {
+  return useMutation({
+    mutationFn: logoutClient,
+  });
+};

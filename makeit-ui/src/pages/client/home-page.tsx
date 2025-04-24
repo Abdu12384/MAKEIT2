@@ -3,6 +3,7 @@ import Services from "@/components/client/homepage/services"
 import Events from "@/components/client/homepage/events"
 import Features from "@/components/client/homepage/fetures"
 import Footer from "@/components/client/homepage/footer"
+import { Navbar } from "@/components/client/homepage/NavBar"
 
 export default function ClientHome() {
   return (

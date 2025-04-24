@@ -5,5 +5,7 @@ export interface IClientAuthController{
    sendOtp(req: Request, res:Response): Promise<void>
    login(req:Request, res:Response): Promise<void>
    authenticateWithGoogle(req: Request, res: Response): Promise<void>;
+   logout(req: Request, res: Response): Promise<void>;
+   handleTokenRefresh(req: Request, res: Response): void;
 
 }   

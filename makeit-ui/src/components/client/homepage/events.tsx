@@ -4,6 +4,8 @@ import { Calendar, Clock, MapPin, ChevronLeft, ChevronRight } from 'lucide-react
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useMediaQuery } from "@/hooks/media-query/use-media-query"
+import eventimg1half from '@/assets/images/eventIMG1half.png'
+import eventimg2half from '@/assets/images/eventIMG2half.png'
 const events = [
   {
     title: "Tech Conference 2025",
@@ -105,7 +107,7 @@ export default function Events() {
       <motion.div
         className="absolute inset-y-0 left-0 w-1/2 z-0"
         style={{
-          backgroundImage: `url('/placeholder.svg?height=1000&width=500')`,
+          backgroundImage: `url(${eventimg1half})`,
           backgroundSize: "cover",
           backgroundPosition: "center left",
           x: leftX,
@@ -117,7 +119,7 @@ export default function Events() {
       <motion.div
         className="absolute inset-y-0 right-0 w-1/2 z-0"
         style={{
-          backgroundImage: `url('/placeholder.svg?height=1000&width=500')`,
+          backgroundImage:`url(${eventimg2half})`,
           backgroundSize: "cover",
           backgroundPosition: "center right",
           x: rightX,
@@ -126,7 +128,7 @@ export default function Events() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-white/90 z-0"></div>
+      <div className="absolute inset-0 z-0"></div>
 
       <div className="px-4 md:px-6 relative z-10">
         <motion.div
@@ -137,7 +139,7 @@ export default function Events() {
           transition={{ duration: 0.6 }}
         >
           <motion.h2
-            className="text-3xl md:text-4xl font-bold tracking-tight text-[#212A31] mb-4"
+            className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4"
             initial={{ y: -20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
@@ -146,7 +148,7 @@ export default function Events() {
             Upcoming Events
           </motion.h2>
           <motion.p
-            className="text-[#2E3944] max-w-2xl mx-auto"
+            className="text-white max-w-2xl mx-auto"
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}

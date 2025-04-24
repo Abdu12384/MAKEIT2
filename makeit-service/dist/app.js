@@ -6,8 +6,10 @@ import morgan from 'morgan';
 import { conncetMongo } from './frameworks/database/connection/dbConnect.js';
 import 'reflect-metadata';
 import { DependencyInjection } from './frameworks/di/index.js';
+import { ClientRoute } from './frameworks/routes/client/clientRoute.js';
 import { AuthRoute } from './frameworks/routes/auth/authRoute.js';
 import { AdminRoute } from './frameworks/routes/admin/adminRoute.js';
+import { VendorRoute } from './frameworks/routes/vendor/vendorRoute.js';
 export class App {
     app;
     database;
@@ -34,8 +36,9 @@ export class App {
     }
     setRoutes() {
         this.app.use('/auth', new AuthRoute().authRoute);
-        // this.app.use('/client', new ClientRoute().clientRoute)
+        this.app.use('/client', new ClientRoute().clientRoute);
         this.app.use('/admin', new AdminRoute().adminRoute);
+        this.app.use('/vendor', new VendorRoute().vendorRoute);
     }
     listen() {
         const port = process.env.PORT || 3000;

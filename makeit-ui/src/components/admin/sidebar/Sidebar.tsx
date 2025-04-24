@@ -1,19 +1,38 @@
-"use client"
-
 import type React from "react"
-
 import { NavLink } from "react-router-dom"
 import { motion } from "framer-motion"
-import { LayoutDashboard, Users, Store, FolderTree, Wallet, ChevronDown, Search } from "lucide-react"
+import { LayoutDashboard, Users, Store, FolderTree, Wallet, ChevronDown, Search, BadgeAlert, LogOut } from "lucide-react"
+import { useDispatch } from "react-redux"
+import { adminLogout } from "@/store/slices/admin.slice"
+import toast from "react-hot-toast"
+import { useLogoutAdmin } from "@/hooks/AdminCustomHooks"
 
 export const Sidebar: React.FC = () => {
   const menuItems = [
-    { id: "dashboard", path: "/_a/dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
-    { id: "users", path: "/_a/users", label: "User Management", icon: <Users size={20} /> },
-    { id: "vendors", path: "/_a/vendors", label: "Vendor Management", icon: <Store size={20} /> },
-    { id: "categories", path: "/_a/categories", label: "Category Management", icon: <FolderTree size={20} /> },
-    { id: "wallet", path: "/_a/wallet", label: "Wallet", icon: <Wallet size={20} /> },
+    { id: "dashboard", path: "/admin/dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
+    { id: "users", path: "/admin/users", label: "User Management", icon: <Users size={20} /> },
+    { id: "vendors", path: "/admin/vendors", label: "Vendor Management", icon: <Store size={20} /> },
+    { id: "requested", path: "/admin/application", label: "Requested Vendors", icon: <BadgeAlert size={20} /> },
+    { id: "categories", path: "/admin/categories", label: "Category Management", icon: <FolderTree size={20} /> },
+    { id: "wallet", path: "/admin/wallet", label: "Wallet", icon: <Wallet size={20} /> },
   ]
+  const { mutate: logout, isLoading } = useLogoutAdmin();
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: (data) => {
+        setTimeout(() => {
+          dispatch(adminLogout());
+        }, 2000);
+				toast.success(data.message);
+				// navigate("/admin");
+			},
+			onError: (err: any) => {
+				toast.error(err.response.data.message);
+			},
+		});
+	};
 
   return (
     <div className="w-72 bg-gray-950 border-r border-gray-800 flex flex-col h-screen sticky top-0">
@@ -87,14 +106,18 @@ export const Sidebar: React.FC = () => {
       <div className="p-4 border-t border-gray-800">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-medium">
-            JD
+            M
           </div>
           <div className="ml-3 flex-1">
-            <h4 className="text-sm font-medium">John Doe</h4>
+            <h4 className="text-sm font-medium">Make IT</h4>
             <p className="text-xs text-gray-400">Admin</p>
           </div>
-          <button className="text-gray-400 hover:text-gray-200">
-            <ChevronDown size={16} />
+          <button 
+            className="text-gray-400 hover:text-red-400 flex items-center"
+            onClick={handleLogout}
+            // disabled={isLoggingOut}
+          >
+            <LogOut size={18} />
           </button>
         </div>
       </div>

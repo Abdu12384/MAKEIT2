@@ -12,8 +12,11 @@ import { LoginUserDTO } from "../../../shared/dtos/user.dto.js";
 import { loginSchema } from "../../../useCases/auth/validation/user-login.validation.schema.js";
 import { ILoginUserUseCase } from "../../../domain/interface/useCaseInterface/auth/login.usecase.interface.js";
 import { IGenerateTokenUseCase } from "../../../domain/interface/useCaseInterface/auth/genarate-token-usecase.interface.js";
-import { setAuthCookies } from "../../../shared/utils/cookie.helper.js";
+import { clearAuthCookies, setAuthCookies, updateCookieWithAccessToken } from "../../../shared/utils/cookie.helper.js";
 import { IGoogleUseCase } from "../../../domain/interface/useCaseInterface/auth/google-usecase.interface.js";
+import { CustomRequest } from "../../middlewares/auth.middleware.js";
+import { IRefreshTokenUseCase } from "../../../domain/interface/useCaseInterface/auth/refresh-token-usecase.interface.js";
+import { IBlackListTokenUseCase } from "../../../domain/interface/useCaseInterface/auth/blacklist-token-usecase.interface.js";
 
 
 @injectable()
@@ -36,7 +39,16 @@ export class AuthController implements IClientAuthController{
        private _generateTokenUseCase : IGenerateTokenUseCase,
 
        @inject("IGoogleUseCase")
-       private _googleUseCase: IGoogleUseCase
+       private _googleUseCase: IGoogleUseCase,
+
+       @inject("IRefreshTokenUseCase")
+       private _refreshTokenUseCase: IRefreshTokenUseCase,
+
+       @inject("IBlackListTokenUseCase")
+       private _blackListTokenUseCase : IBlackListTokenUseCase,
+
+       @inject("IRevokeRefreshTokenUseCase")
+       private _revokeRefreshTokenUseCase: IRefreshTokenUseCase
 
      ) {}
  
@@ -208,6 +220,75 @@ export class AuthController implements IClientAuthController{
         handleErrorResponse(res, error)
       }
    }
+
+
+
+   
+
+// ══════════════════════════════════════════════════════════
+//  User Logout
+// ══════════════════════════════════════════════════════════
+
+
+   async logout(req: Request, res: Response): Promise<void> {
+		try {
+			await this._blackListTokenUseCase.execute(
+				(req as CustomRequest).user.access_token
+			);
+
+			await this._revokeRefreshTokenUseCase.execute(
+				(req as CustomRequest).user.refresh_token
+			);
+
+			const user = (req as CustomRequest).user;
+      console.log(user,'logout user')
+			const accessTokenName = `${user.role}_access_token`;
+			const refreshTokenName = `${user.role}_refresh_token`;
+			clearAuthCookies(res, accessTokenName, refreshTokenName);
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.LOGOUT_SUCCESS,
+			});
+		} catch (error) {
+			handleErrorResponse(res, error);
+		}
+	}
+
+
+
+
+// ══════════════════════════════════════════════════════════
+//  Token Refresh Handler
+// ══════════════════════════════════════════════════════════
+
+
+       handleTokenRefresh(req: Request, res: Response): void {
+         try {
+           const refreshToken = (req as CustomRequest).user.refresh_token;
+           const newTokens = this._refreshTokenUseCase.execute(refreshToken)
+           const accessTokenName = `${newTokens.role}_access_token`;
+            updateCookieWithAccessToken(
+              res,
+              newTokens.accessToken,
+              accessTokenName
+            )
+            res.status(HTTP_STATUS.OK).json({
+               success: true,
+               message: SUCCESS_MESSAGES.OPERATION_SUCCESS
+         })
+         } catch (error) {
+            clearAuthCookies(
+              res,
+              `${(req as CustomRequest).user.role}_access_token`,
+              `${(req as CustomRequest).user.role}_refresh_token`
+            )
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({
+               message: ERROR_MESSAGES.INVALID_TOKEN
+            })
+         }
+   }
+
+
 
 
 

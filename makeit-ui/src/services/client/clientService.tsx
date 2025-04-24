@@ -1,5 +1,6 @@
 import authAxiosInstance from "@/api/auth.axios";
-import clientAxiosInstance from "@/api/client.axios";
+import { clientAxiosInstance } from "@/api/client.axios";
+import { IAuthResponse, IAxiosResponse } from "@/types/response";
 import { ILoginData } from "@/types/User";
 import axios, { isAxiosError } from "axios";
 import { LogIn } from "lucide-react";
@@ -29,6 +30,15 @@ type Client = {
   name: string;
   profileImage: string
 }
+
+
+export const refreshClientSession = async (): Promise<IAuthResponse> => {
+  const response = await clientAxiosInstance.get<IAuthResponse>(
+    "/client/refresh-session"
+  );
+  return response.data;
+};
+
 
 
 export const clientSignup = async (values: SignupPayload): Promise<SingupResponse> =>{
@@ -73,19 +83,26 @@ export const clientResendOtp = async (email: string) =>{
 
 
 
-
 export const clientLogin = async (user:ILoginData)=>{
    try {
      const response = await authAxiosInstance.post('/login',user)
      return response.data
    } catch (error) {
        console.log('error while client login', error)
-       if (isAxiosError(error)) {
-        throw new Error(error.response?.data?.error)
-    }
        throw error
    }
 }
+
+
+
+
+
+
+export const logoutClient = async (): Promise<IAxiosResponse> => {
+  const response = await clientAxiosInstance.post("/client/logout");
+  return response.data;
+};
+
 
 
 

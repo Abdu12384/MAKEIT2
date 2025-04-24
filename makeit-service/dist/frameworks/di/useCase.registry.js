@@ -13,6 +13,12 @@ import { GoogleUseCase } from "../../useCases/auth/google-usecase.js";
 import { SendEmailUseCase } from "../../useCases/common/send-email.usecase.js";
 import { GetAllUserUseCase } from "../../useCases/users/get-all-users.usecase.js";
 import { UpdateUserStatusUseCase } from "../../useCases/users/update-user-status.usecase.js";
+import { GetAllVendorUseCase } from "../../useCases/vendor/get-all-vendor-usecase.js";
+import { UpdateVendorStatusUseCase } from "../../useCases/vendor/update-vendor-status.usecase.js";
+import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase.js";
+import { GetUserDetailsUseCase } from "../../useCases/users/get-user-details.usecase.js";
+import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase.js";
+import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase.js";
 export class UseCaseRegistry {
     static registerUseCase() {
         // ======================= Auth ==========================//
@@ -43,6 +49,21 @@ export class UseCaseRegistry {
         container.register("IUpdateUserStatusUseCase", {
             useClass: UpdateUserStatusUseCase
         });
+        container.register("IGetAllVendorUseCase", {
+            useClass: GetAllVendorUseCase
+        });
+        container.register("IUpdateVendorStatusUseCase", {
+            useClass: UpdateVendorStatusUseCase
+        });
+        container.register("IGetUserDetailsUseCase", {
+            useClass: GetUserDetailsUseCase
+        });
+        container.register("IBlackListTokenUseCase", {
+            useClass: BlackListTokenUseCase
+        });
+        container.register("IRevokeRefreshTokenUseCase", {
+            useClass: RevokeRefreshTokenUseCase
+        });
         //======================= Register Bycripts =======================//
         container.register("IPasswordHasher", {
             useClass: HashPassword
@@ -59,6 +80,9 @@ export class UseCaseRegistry {
         });
         container.register("ISendEmailUseCase", {
             useClass: SendEmailUseCase
+        });
+        container.register("IRefreshTokenUseCase", {
+            useClass: RefreshTokenUseCase
         });
     }
 }
