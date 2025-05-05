@@ -1,4 +1,4 @@
-import { IPaginatedVendor } from "../../../entities/paginated/paginated-shop.entity";
+import { IPaginatedVendor } from "../../../entities/paginated/paginated-vendor.entity";
 
 export interface IGetAllVendorUseCase {
 	execute(

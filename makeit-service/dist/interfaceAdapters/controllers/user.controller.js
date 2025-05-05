@@ -13,16 +13,19 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 import { inject, injectable } from "tsyringe";
 import { ERROR_MESSAGES, HTTP_STATUS, SUCCESS_MESSAGES } from "../../shared/constants.js";
 import { handleErrorResponse } from "../../shared/utils/error.handler.js";
+import { CustomError } from "../../domain/utils/custom.error.js";
 let UserController = class UserController {
     _getAllUserUserCase;
     _updateUserStatusUseCase;
     _getAllVendorUseCase;
     _getUserDetailsUseCase;
-    constructor(_getAllUserUserCase, _updateUserStatusUseCase, _getAllVendorUseCase, _getUserDetailsUseCase) {
+    _updateUserDetailsUseCase;
+    constructor(_getAllUserUserCase, _updateUserStatusUseCase, _getAllVendorUseCase, _getUserDetailsUseCase, _updateUserDetailsUseCase) {
         this._getAllUserUserCase = _getAllUserUserCase;
         this._updateUserStatusUseCase = _updateUserStatusUseCase;
         this._getAllVendorUseCase = _getAllVendorUseCase;
         this._getUserDetailsUseCase = _getUserDetailsUseCase;
+        this._updateUserDetailsUseCase = _updateUserDetailsUseCase;
     }
     // ══════════════════════════════════════════════════════════
     //  Get All Users (Role Based)
@@ -98,6 +101,29 @@ let UserController = class UserController {
             handleErrorResponse(res, error);
         }
     }
+    // ══════════════════════════════════════════════════════════
+    //   Update User Details
+    // ══════════════════════════════════════════════════════════
+    async updateUserDetails(req, res) {
+        try {
+            const data = req.body;
+            console.log(data);
+            const { userId, role } = req.user;
+            const updatedUser = await this._updateUserDetailsUseCase.execute(userId, role, data);
+            if (!updatedUser) {
+                throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
+            }
+            const { password, ...userWithoutPassword } = updatedUser;
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+                user: userWithoutPassword,
+            });
+        }
+        catch (error) {
+            handleErrorResponse(res, error);
+        }
+    }
 };
 UserController = __decorate([
     injectable(),
@@ -105,7 +131,8 @@ UserController = __decorate([
     __param(1, inject("IUpdateUserStatusUseCase")),
     __param(2, inject("IGetAllVendorUseCase")),
     __param(3, inject("IGetUserDetailsUseCase")),
-    __metadata("design:paramtypes", [Object, Object, Object, Object])
+    __param(4, inject("IUpdateUserDetailsUseCase")),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object])
 ], UserController);
 export { UserController };
 //# sourceMappingURL=user.controller.js.map

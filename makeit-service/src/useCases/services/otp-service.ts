@@ -1,6 +1,6 @@
 import { injectable,inject } from "tsyringe";
 import { IOtpService } from "../../domain/interface/servicesInterface/otp-service.interface";
-import { IOtpRepositroy } from "../../domain/interface/repositoryInterfaces/services/otp-service.repository";
+import { IOtpRepositroy } from "../../domain/interface/repositoryInterfaces/common-services/otp-service.repository";
 
 
 @injectable()

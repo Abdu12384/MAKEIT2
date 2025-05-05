@@ -2,6 +2,7 @@
 import { IEmailService } from "../../domain/interface/servicesInterface/email.service.interface";
 import nodemailer from 'nodemailer'
 import { injectable } from "tsyringe";
+import { VERIFICATION_MAIL_CONTENT } from "../../shared/constants.js";
 
 
 
@@ -40,7 +41,7 @@ export class EmailService implements IEmailService{
         from: process.env.EMAIL_USER,
         to: email,
         subject: subject,
-        text:`Your OTP code is:${otp}`
+        html:VERIFICATION_MAIL_CONTENT(otp)
        } 
 
        await this._transporter.sendMail(mailOptions)

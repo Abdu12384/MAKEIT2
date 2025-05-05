@@ -16,8 +16,19 @@ export const ProtectedRoute = ({
   console.log('the session',session)
 
 	if (!session) return <Navigate to="/" />;
-	if (!allowedRoles.includes(session.role as string))
-		return <Navigate to="/unauthorized" />;
 
+	const role = session.role;
+
+	if (!role || !allowedRoles.includes(role)) {
+		const loginRedirects: Record<string, string> = {
+			client: "/",
+			vendor: "/vendor/login",
+			admin: "/admin/login",
+		};
+	
+		const redirectPath = loginRedirects[role as keyof typeof loginRedirects] || "/unauthorized";
+		return <Navigate to={redirectPath} />;
+	}
+	
 	return element;
 };

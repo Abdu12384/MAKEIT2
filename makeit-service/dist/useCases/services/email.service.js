@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import nodemailer from 'nodemailer';
 import { injectable } from "tsyringe";
+import { VERIFICATION_MAIL_CONTENT } from "../../shared/constants.js";
 let EmailService = class EmailService {
     _transporter;
     constructor() {
@@ -31,7 +32,7 @@ let EmailService = class EmailService {
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: subject,
-                text: `Your OTP code is:${otp}`
+                html: VERIFICATION_MAIL_CONTENT(otp)
             };
             await this._transporter.sendMail(mailOptions);
             console.log(`OTP sent to ${email}`);

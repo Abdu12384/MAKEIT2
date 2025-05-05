@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IGetAllVendorUseCase } from "../../domain/interface/useCaseInterface/vendor/get-all-vendor-usecase.interface";
-import { IPaginatedVendor } from "../../domain/entities/paginated/paginated-shop.entity";
+import { IPaginatedVendor } from "../../domain/entities/paginated/paginated-vendor.entity";
 import { IVendorRepository } from "../../domain/interface/repositoryInterfaces/users/vendor.repository.interface";
 
 

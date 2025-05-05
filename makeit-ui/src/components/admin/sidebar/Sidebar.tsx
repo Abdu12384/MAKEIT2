@@ -16,7 +16,7 @@ export const Sidebar: React.FC = () => {
     { id: "categories", path: "/admin/categories", label: "Category Management", icon: <FolderTree size={20} /> },
     { id: "wallet", path: "/admin/wallet", label: "Wallet", icon: <Wallet size={20} /> },
   ]
-  const { mutate: logout, isLoading } = useLogoutAdmin();
+  const { mutate: logout } = useLogoutAdmin();
   const dispatch = useDispatch()
 
   const handleLogout = () => {

@@ -14,6 +14,7 @@ import { useVendorLoginMutation } from "@/hooks/VendorCustomHooks"
 import { useAdminLoginMutation } from "@/hooks/AdminCustomHooks"
 import { useAppDispatch } from "@/store/store"
 import { adminLogin } from "@/store/slices/admin.slice"
+import LottieAnimation from "@/utils/animations/loatiieLoading"
 
 
 interface FormData {
@@ -37,6 +38,7 @@ export function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>(initialValues)
+  const [commonLoading, setCommonLoading] = useState(false)
   const navigate = useNavigate()
   const loginMutation = useAdminLoginMutation()
   const [formErrors, setFormErrors] = useState<FormErrors>({})
@@ -71,10 +73,11 @@ export function AdminLoginPage() {
      console.log('usedata',formData)
     loginMutation.mutate(formData,{
        onSuccess:(data) =>{
-        console.log(data)
+        setCommonLoading(true)
         window.setTimeout(() => {
           dispatch(adminLogin(data.user as IAdmin))
-        }, 2000);
+          setCommonLoading(false)
+        }, 3000);
        },
        onError:(error:any)=>{
         toast.error(error?.response?.data?.message)
@@ -115,6 +118,7 @@ export function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center h-[90vh]">
+            <LottieAnimation visible={commonLoading}/>
       <div className="w-full h-full bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="flex flex-col md:flex-row h-full">
           {/* Left side - Image (reversed from signup) */}

@@ -7,6 +7,10 @@ import { UserController } from "../../interfaceAdapters/controllers/user.control
 import { IVendorController } from "../../domain/interface/controllerInterfaces/vendor/vendor-controller.interface.js"
 import { VendorCantroller } from "../../interfaceAdapters/controllers/vendor.controller.js"
 import { BlockStatusMiddleware } from "../../interfaceAdapters/middlewares/block.status.middleware.js"
+import { IServiceController } from "../../domain/interface/controllerInterfaces/service/service-controller.interface.js"
+import { ServiceController } from "../../interfaceAdapters/controllers/service.controller.js"
+import { ICategoryController } from "../../domain/interface/controllerInterfaces/category/category-controller.interface.js"
+import { CategoryController } from "../../interfaceAdapters/controllers/category.controller.js"
 
 
 
@@ -29,3 +33,9 @@ export const userController =
 
 export const vendorController = 
          container.resolve<IVendorController>(VendorCantroller)
+
+export const serviceController = 
+         container.resolve<IServiceController>(ServiceController)
+
+export const categoryController = 
+         container.resolve<ICategoryController>(CategoryController)

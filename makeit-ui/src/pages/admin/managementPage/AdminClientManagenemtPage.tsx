@@ -5,7 +5,7 @@ import { ClientManagementComponent } from "@/components/admin/mangement/UserMang
 import { useGetAllUsers, useUpdateUserStatusMutaiion } from "@/hooks/AdminCustomHooks";
 import { IClient } from "@/types/User";
 import toast from "react-hot-toast";
-// import { useUpdateUserStatusMutation } from "@/hooks/admin/useUpdateUserStatus";
+
 
 export const AdminClientManagementPage: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -14,7 +14,7 @@ export const AdminClientManagementPage: React.FC = () => {
 	const limit = 10;
 
  const { mutate: updateUserStatus} = useUpdateUserStatusMutaiion()
-	// const { errorToast, successToast } = useToaster();
+
 
 	useEffect(() => {
 		const handler = debounce(() => setDebouncedSearch(searchQuery), 300);

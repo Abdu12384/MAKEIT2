@@ -1,6 +1,7 @@
 import authAxiosInstance from "@/api/auth.axios";
 import { clientAxiosInstance } from "@/api/client.axios";
 import { IAuthResponse, IAxiosResponse } from "@/types/response";
+import { GetAllServicesParams } from "@/types/service";
 import { ILoginData } from "@/types/User";
 import axios, { isAxiosError } from "axios";
 import { LogIn } from "lucide-react";
@@ -97,40 +98,104 @@ export const clientLogin = async (user:ILoginData)=>{
 
 
 
-
-export const logoutClient = async (): Promise<IAxiosResponse> => {
-  const response = await clientAxiosInstance.post("/client/logout");
-  return response.data;
-};
-
-
-
-
-
-
-
 export const clientGoogleLogin = async ({
-    credential,
-    client_id,
-    role,
+  credential,
+  client_id,
+  role,
 }:{
   credential: string,
   client_id: string,
   role: string
 }) => {
   try {
-     const response = await authAxiosInstance.post(
+    const response = await authAxiosInstance.post(
       '/google-auth',
       {
         credential,
         client_id,
         role
       })
-     return response.data
+      return response.data
+    } catch (error) {
+      console.log('error while client google login',error)
+      throw error
+    }
+  }
+  
+  
+  
+  export const clientProfileEdit = async (data:Record<string, string|number|boolean>) => {
+    try {
+       const response = await clientAxiosInstance.put('/client/profile',data)
+      return response.data
+    } catch (error) {
+      console.log('error while client profile edit',error)
+      throw error
+    }
+  }
+
+
+
+
+
+
+
+export const clientGetAllServices = async ({
+  page = 1,
+  limit = 10,
+  search = "",
+  sortOrder = "asc"
+}: GetAllServicesParams) => {
+  try {
+    const response = await clientAxiosInstance.get('/client/services', {
+      params: {
+        page,
+        limit,
+        search,
+        sortOrder
+      }
+    })
+    return response.data
   } catch (error) {
-    console.log('error while client google login',error)
+    console.log('error while client get all services',error)
     throw error
   }
 }
 
 
+
+
+export const clientGetServiceById = async (id:string) => {
+  try {
+    const response = await clientAxiosInstance.get(`/client/services/${id}`)
+    return response.data
+  } catch (error) {
+    console.log('error while client get service by id',error)
+    throw error
+  }
+}
+
+
+
+
+export const clientBookingService = async (id:string,bookingData:Record<string, string|number|boolean>) => {
+  try {
+    console.log('client booking service',id,bookingData)
+    const response = await clientAxiosInstance.post(`/client/services/${id}/book`,bookingData)
+    return response.data
+  } catch (error) {
+    console.log('error while client booking service',error)
+    throw error
+  }
+}
+
+
+  
+  
+
+
+  export const logoutClient = async (): Promise<IAxiosResponse> => {
+    const response = await clientAxiosInstance.post("/client/logout");
+    return response.data;
+  };
+  

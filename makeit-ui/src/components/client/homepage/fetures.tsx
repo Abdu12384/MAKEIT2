@@ -2,6 +2,7 @@ import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import fetureIMG from '@/assets/images/feturepageIMG.jpg'
 
 const features = [
   "Connect with verified vendors",
@@ -56,7 +57,7 @@ export default function Features() {
       <motion.div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url('/placeholder.svg?height=1000&width=1000')`,
+          backgroundImage: `url(${fetureIMG})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           opacity,
@@ -147,7 +148,7 @@ export default function Features() {
             }}
           >
             <img
-              src="/placeholder.svg?height=800&width=600"
+              src={fetureIMG}
               alt="Platform features"
               className="h-full w-full object-cover"
             />

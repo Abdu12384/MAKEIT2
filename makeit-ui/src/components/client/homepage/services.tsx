@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useMediaQuery } from "@/hooks/media-query/use-media-query"
 import bgIMG from '@/assets/images/servicebackround.jpg'
 import bgIMG2 from '@/assets/images/servicebg.webp'
+import { useClientGetAllServicesMutation } from "@/hooks/ClientCustomHooks";
 const services = [
   {
     title: "Event Planning",
@@ -39,6 +40,9 @@ const services = [
   },
 ]
 
+
+ 
+
 export default function Services() {
   const sectionRef = useRef<HTMLElement>(null)
   const carouselRef = useRef<HTMLDivElement>(null)
@@ -47,8 +51,27 @@ export default function Services() {
   const isMobile = useMediaQuery("(max-width: 768px)")
   const [cardsPerView, setCardsPerView] = useState(3)
 
+  const clientGetAllServicesMutation = useClientGetAllServicesMutation()
+
   // Update cards per view based on screen size
+
+   useEffect(()=>{
+    clientGetAllServicesMutation.mutate(
+      undefined,
+      {
+        onSuccess: (data) => {
+          console.log('data',data)
+        },
+        onError: (error) => {
+          console.log('error',error)
+        }
+      } 
+    )
+   },[])
+
+
   useEffect(() => {
+    
     setCardsPerView(isMobile ? 1 : 3)
   }, [isMobile])
 

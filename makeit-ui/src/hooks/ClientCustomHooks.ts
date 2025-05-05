@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { clientCreateAccount, clientGoogleLogin, clientLogin, clientResendOtp, clientSignup, logoutClient } from '@/services/client/clientService';
+import { clientCreateAccount, clientGetAllServices, clientGetServiceById, clientGoogleLogin, clientLogin, clientProfileEdit, clientResendOtp, clientSignup, logoutClient } from '@/services/client/clientService';
 import { ILoginData } from '@/types/User';
 import { emit } from 'process';
 
@@ -64,6 +64,31 @@ export const useResendOtpClientMutaion = () => {
    })
 }
 
+
+
+
+
+export const useClientGetAllServicesMutation = () => {
+  return useMutation({
+    mutationFn: clientGetAllServices
+  })
+}     
+
+
+
+export const useClientProfileEditMutation = () => {
+  return useMutation({
+    mutationFn:(data:Record<string, string|number|boolean>) => clientProfileEdit(data)
+  })
+}
+
+
+
+export const useClientGetServiceByIdMutation = () => {
+  return useMutation({
+    mutationFn: (id:string) => clientGetServiceById(id)
+  })
+}
 
 
 

@@ -24,7 +24,7 @@ const rootPersistConfig = {
 
 const rootReducer = combineReducers({
 	client: clientReducer,
-  venodr : vendorReducer,
+  vendor : vendorReducer,
 	admin: adminReducer,
 });
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

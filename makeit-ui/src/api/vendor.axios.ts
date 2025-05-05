@@ -22,7 +22,7 @@ VendorAxiosInstance.interceptors.response.use(
 			if (!isRefreshing) {
 				isRefreshing = true;
 				try {
-					await VendorAxiosInstance.post("/barber/refresh-token");
+					await VendorAxiosInstance.post("/vendor/refresh-token");
 					isRefreshing = false;
 					return VendorAxiosInstance(originalRequest);
 				} catch (refreshError) {
@@ -48,7 +48,7 @@ VendorAxiosInstance.interceptors.response.use(
 			console.log("Session ended");
 			// store.dispatch(barberLogout())
 
-			window.location.href = "/barber";
+			window.location.href = "/vendor";
 			toast("Please login again");
 			return Promise.reject(error);
 		}

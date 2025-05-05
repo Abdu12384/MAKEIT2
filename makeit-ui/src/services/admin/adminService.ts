@@ -19,6 +19,11 @@ export interface UserQueryParams {
   userType: string;
 }
 
+export interface Category {
+	title: string;
+	description: string;
+}
+
 
 export const refreshAdminSession = async (): Promise<IAuthResponse> => {
 	const response = await adminAxiosInstance.get<IAuthResponse>(
@@ -117,6 +122,49 @@ export const updateVendorStatusById = async ({
 	);
 	return response.data;
 };
+
+
+
+export const createCategory = async (data: Category) => {
+	try {
+		const response = await adminAxiosInstance.post("/admin/category", data);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	  }
+};
+
+
+export const getAllCategories = async (params: { limit?: number; page?: number; search?: string }) => {
+  const response = await adminAxiosInstance.get("/admin/category", { params });
+  return response.data;
+};
+
+
+
+export const updateCategoryStatus = async (id: string, status: string) => {
+  try {
+	const response = await adminAxiosInstance.patch(`/admin/category/${id}`, { status });
+	return response.data;
+  } catch (error) {
+    console.log('error while updating category status',error)
+    throw error
+  }
+};
+
+
+export const editCategory = async ({data,categoryId}: {data: Category,categoryId: string}) => {
+	try {
+		const response = await adminAxiosInstance.put(`/admin/category/${categoryId}`, data);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+
 
 
 

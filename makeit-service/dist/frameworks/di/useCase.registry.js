@@ -19,6 +19,16 @@ import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase.j
 import { GetUserDetailsUseCase } from "../../useCases/users/get-user-details.usecase.js";
 import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase.js";
 import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase.js";
+import { UpdateUserDetailsUseCase } from "../../useCases/users/update-user-details.usecase.js";
+import { AddServiceUseCase } from "../../useCases/vendor/service/add-service.usecase.js";
+import { GetAllServiceUseCase } from "../../useCases/vendor/service/get-all-service.usecase.js";
+import { CategoryUseCase } from "../../useCases/admin/create-category-usecase.js";
+import { GetAllCategoryUseCase } from "../../useCases/admin/get-all-category-usecase.js";
+import { UpdateStatusCategoryUseCase } from "../../useCases/admin/update-category-usecase.js";
+import { EditCategoryUseCase } from "../../useCases/admin/edit-category-usecase.js";
+import { EditServiceUseCase } from "../../useCases/vendor/service/edit-service.usecase.js";
+import { UpdateServiceStatusUseCase } from "../../useCases/vendor/service/update-status-service.usecase.js";
+import { GetServiceByIdUseCase } from "../../useCases/vendor/service/get-service-by-id.usecase.js";
 export class UseCaseRegistry {
     static registerUseCase() {
         // ======================= Auth ==========================//
@@ -63,6 +73,36 @@ export class UseCaseRegistry {
         });
         container.register("IRevokeRefreshTokenUseCase", {
             useClass: RevokeRefreshTokenUseCase
+        });
+        container.register("IUpdateUserDetailsUseCase", {
+            useClass: UpdateUserDetailsUseCase
+        });
+        container.register("IAddServiceUseCase", {
+            useClass: AddServiceUseCase
+        });
+        container.register("IGetAllServicesUseCase", {
+            useClass: GetAllServiceUseCase
+        });
+        container.register("ICategoryUseCase", {
+            useClass: CategoryUseCase
+        });
+        container.register("IGetCategoryUseCase", {
+            useClass: GetAllCategoryUseCase
+        });
+        container.register("IUpdateStatusCategoryUseCase", {
+            useClass: UpdateStatusCategoryUseCase
+        });
+        container.register("IEditCategoryUseCase", {
+            useClass: EditCategoryUseCase
+        });
+        container.register("IEditServiceUseCase", {
+            useClass: EditServiceUseCase
+        });
+        container.register("IUpdateServiceStatusUseCase", {
+            useClass: UpdateServiceStatusUseCase
+        });
+        container.register("IGetServiceByIdUseCase", {
+            useClass: GetServiceByIdUseCase
         });
         //======================= Register Bycripts =======================//
         container.register("IPasswordHasher", {

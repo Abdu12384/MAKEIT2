@@ -10,8 +10,8 @@ interface NoAuthRouteProps {
 const getActiveSession = (state: RootState) => {
 	if (state.client.client)
 		return { role: state.client.client.role, type: "client" };
-	if (state.venodr.vendor)
-		return { role: state.venodr.vendor.role, type: "vendor" };
+	if (state.vendor.vendor)
+		return { role: state.vendor.vendor.role, type: "vendor" };
 	if (state.admin.admin)
 		return { role: state.admin.admin.role, type: "admin" };
 	return null;
@@ -23,7 +23,7 @@ export const NoAuthRoute = ({ element }: NoAuthRouteProps) => {
 	if (session && session.role) {
 		const roleRedirects: Record<string, string> = {
 			client: "/",
-			vendor: "/vendor/profile",
+			vendor: "/vendor/home",
 			admin: "/admin/dashboard",
 		};
 		return <Navigate to={roleRedirects[session.role] || "/unauthorized"} />;

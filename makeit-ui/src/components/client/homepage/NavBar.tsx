@@ -16,6 +16,7 @@ import { useLogoutClient } from "@/hooks/ClientCustomHooks"
 import { useDispatch } from "react-redux"
 import { clientLogout } from "@/store/slices/client.slice"
 import toast from "react-hot-toast"
+import { Link } from 'react-router-dom';
 
 
 
@@ -35,12 +36,12 @@ export const Navbar: React.FC = () => {
   const { isLoggedIn, client } = useSelector((state: RootState) => state.client)
   const dispatch = useDispatch()
   
-  const { mutate: logout, isLoading } = useLogoutClient();
-
+  const { mutate: logout } = useLogoutClient();
+  
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: (data) => {
-          dispatch(clientLogout());
+        dispatch(clientLogout());
           setTimeout(() => {
           }, 2000);
           toast.success(data.message);
@@ -82,9 +83,9 @@ export const Navbar: React.FC = () => {
 
           {/* Navigation Links - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
-            <NavLink active={true} icon={<Home size={18} />}>Home</NavLink>
-            <NavLink icon={<CalendarCheck size={18} />}>Events</NavLink>
-            <NavLink icon={<Users size={18} />}>Vendors</NavLink>
+            <NavLink to="/" icon={<Home size={18} />}>Home</NavLink>
+            <NavLink to="/events" icon={<CalendarCheck size={18} />}>Events</NavLink>
+            <NavLink to="/services" icon={<FileBarChart2 size={18} />}>Services</NavLink>
 
           </div>
 
@@ -93,8 +94,10 @@ export const Navbar: React.FC = () => {
             {isLoggedIn ? (
               <div className="flex items-center space-x-2">
                 <UserCircle size={24} />
-                <span>{client?.name || "User"}</span>
-                <button
+                <Link to={`/client/profile`} className="text-blue-600 hover:underline">
+                  {client?.name || "User"}
+                </Link>               
+                 <button
                   onClick={handleLogout}
                   className="ml-2 px-3 py-1 rounded bg-red-500 hover:bg-red-600 text-sm"
                 >
@@ -137,7 +140,7 @@ export const Navbar: React.FC = () => {
         <MobileNavLink active={true} icon={<LayoutDashboard size={18} />}>Dashboard</MobileNavLink>
         <MobileNavLink icon={<CalendarCheck size={18} />}>Events</MobileNavLink>
         <MobileNavLink icon={<CalendarDays size={18} />}>Calendar</MobileNavLink>
-        <MobileNavLink icon={<Users size={18} />}>Vendors</MobileNavLink>
+        <MobileNavLink icon={<FileBarChart2 size={18} />}>Services</MobileNavLink>
 
         {/* Mobile Add Button */}
         {isLoggedIn && (
@@ -175,21 +178,17 @@ interface NavLinkProps {
   icon?: React.ReactNode
 }
 
-const NavLink: React.FC<NavLinkProps> = ({ children, active = false, icon }) => {
+const NavLink: React.FC<NavLinkProps & { to: string }> = ({ children, icon, to }) => {
   return (
-    <a
-      href="#"
-      className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-        active
-          ? "bg-gray-900 text-white"
-          : "text-gray-300 hover:bg-gray-700 hover:text-white transition"
-      }`}
+    <Link
+      to={to}
+      className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition"
     >
       {icon && <span className="mr-2">{icon}</span>}
       {children}
-    </a>
-  )
-}
+    </Link>
+  );
+};
 
 const MobileNavLink: React.FC<NavLinkProps> = ({ children, active = false, icon }) => {
   return (

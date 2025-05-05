@@ -6,6 +6,8 @@ import { VendorRepository } from '../../interfaceAdapters/repository/users/vendo
 import { AdminRepository } from '../../interfaceAdapters/repository/users/admin.repository.js';
 import { RefreshTokenRepository } from '../../interfaceAdapters/repository/authService-repository/refresh-token.repository.js';
 import { RedisTokenRepository } from '../../interfaceAdapters/repository/redis/redis-token.repository.js';
+import { ServiceRepository } from '../../interfaceAdapters/repository/service/service.repository.js';
+import { CategoryRepository } from '../../interfaceAdapters/repository/admin/category-repository.js';
 export class RepositoryRegistry {
     static registerRepositories() {
         container.register('IClientRepository', {
@@ -25,6 +27,12 @@ export class RepositoryRegistry {
         });
         container.register("IRedisTokenRepository", {
             useClass: RedisTokenRepository
+        });
+        container.register("IServiceRepository", {
+            useClass: ServiceRepository
+        });
+        container.register("ICategoryRepository", {
+            useClass: CategoryRepository
         });
     }
 }

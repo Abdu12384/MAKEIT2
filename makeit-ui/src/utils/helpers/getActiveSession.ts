@@ -3,7 +3,7 @@ import { RootState } from "@/store/store";
 
   export const getActiveSession = createSelector(
 	(state: RootState) => state.client.client,
-	(state: RootState) => state.venodr.vendor,
+	(state: RootState) => state.vendor.vendor,
 	(state: RootState) => state.admin.admin,
 	(client, vendor, admin) => {
 		if (client) return { role: client.role, type: "client" };

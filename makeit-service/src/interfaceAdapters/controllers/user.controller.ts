@@ -8,6 +8,8 @@ import { IUpdateUserStatusUseCase } from "../../domain/interface/useCaseInterfac
 import { IGetAllVendorUseCase } from "../../domain/interface/useCaseInterface/vendor/get-all-vendor-usecase.interface.js";
 import { CustomRequest } from "../middlewares/auth.middleware.js";
 import { IGetUserDetailsUseCase } from "../../domain/interface/useCaseInterface/users/get-user-details-usecase.interface.js";
+import { IUpdateUserDetailsUseCase } from "../../domain/interface/useCaseInterface/users/update-user-details-usecase.interface.js";
+import { CustomError } from "../../domain/utils/custom.error.js";
 
 
 @injectable()
@@ -23,7 +25,10 @@ export class UserController implements IUserController{
       private _getAllVendorUseCase : IGetAllVendorUseCase,
 
       @inject("IGetUserDetailsUseCase")
-      private _getUserDetailsUseCase: IGetUserDetailsUseCase
+      private _getUserDetailsUseCase: IGetUserDetailsUseCase,
+
+      @inject("IUpdateUserDetailsUseCase")
+      private _updateUserDetailsUseCase : IUpdateUserDetailsUseCase
    ){}
 
 
@@ -132,6 +137,43 @@ async refreshSession(req: Request, res: Response): Promise<void> {
       handleErrorResponse(res, error);
    }
 }
+
+
+
+
+
+
+// ══════════════════════════════════════════════════════════
+//   Update User Details
+// ══════════════════════════════════════════════════════════
+
+  async updateUserDetails(req: Request, res: Response): Promise<void> {
+     try {
+       const data = req.body
+       console.log(data)
+       const {userId, role} = (req as CustomRequest).user;
+       const updatedUser = await this._updateUserDetailsUseCase.execute(
+         userId,
+         role,
+         data
+       )
+   if(!updatedUser){
+       throw new CustomError(
+           ERROR_MESSAGES.USER_NOT_FOUND,
+           HTTP_STATUS.NOT_FOUND
+       )
+   }
+
+   const {password, ...userWithoutPassword} = updatedUser
+   res.status(HTTP_STATUS.OK).json({
+       success:true,
+       message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+       user: userWithoutPassword,
+   })
+     } catch (error) {
+       handleErrorResponse(res,error)      
+     }
+  }
 
 
 }

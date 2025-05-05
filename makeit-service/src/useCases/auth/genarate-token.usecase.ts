@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IGenerateTokenUseCase } from "../../domain/interface/useCaseInterface/auth/genarate-token-usecase.interface";
 import { ITokenService } from "../../domain/interface/servicesInterface/jwt-service.interface";
-import { IRefreshTokenReposiory } from "../../domain/interface/repositoryInterfaces/services/refresh-token.entity";
+import { IRefreshTokenReposiory } from "../../domain/interface/repositoryInterfaces/common-services/refresh-token.entity";
 import { TRole } from "../../shared/constants";
 
 

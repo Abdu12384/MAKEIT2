@@ -108,3 +108,166 @@ export const ERROR_MESSAGES = {
 	FILE_SIZE_EXCEEDED: "File size is too large",
 	RATE_LIMIT_EXCEEDED: "Too many requests try again later",
 } as const;
+
+
+
+
+
+
+
+
+
+export const VERIFICATION_MAIL_CONTENT = (otp: string) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Your Email - MakeIT</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #121212; color: #ffffff;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+    <!-- Modern Dark Header -->
+    <tr>
+      <td style="padding: 40px 30px; text-align: center;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td>
+              <!-- Logo with glowing effect -->
+              <div style="display: inline-block; position: relative; margin-bottom: 20px;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle, rgba(0,255,170,0.3) 0%, rgba(0,0,0,0) 70%); filter: blur(10px); z-index: 0;"></div>
+                <h1 style="position: relative; z-index: 1; font-size: 42px; font-weight: 900; margin: 0; background: linear-gradient(90deg, #00ffaa 0%, #2e3192 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">
+                  Make<span style="font-weight: 900;">IT</span>
+                </h1>
+              </div>
+              <p style="margin: 0; color: #aaaaaa; font-size: 16px; letter-spacing: 1px;">INNOVATION STARTS HERE</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    
+    <!-- Main Content -->
+    <tr>
+      <td style="background-color: #1e1e1e; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <!-- Header Bar -->
+          <tr>
+            <td style="padding: 20px 30px; background: linear-gradient(90deg, #2e3192 0%, #00ffaa 100%); border-radius: 16px 16px 0 0;">
+              <h2 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">Verify Your Account</h2>
+            </td>
+          </tr>
+          
+          <!-- Content Area -->
+          <tr>
+            <td style="padding: 40px 30px 20px;">
+              <p style="margin: 0 0 20px; color: #dddddd; font-size: 16px; line-height: 1.6;">
+                Hey there,
+              </p>
+              <p style="margin: 0 0 30px; color: #dddddd; font-size: 16px; line-height: 1.6;">
+                Welcome to MakeIT! To complete your registration and unlock all features, please use the verification code below:
+              </p>
+            </td>
+          </tr>
+          
+          <!-- OTP Section with futuristic design -->
+          <tr>
+            <td style="padding: 0 30px 30px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td>
+                    <div style="background-color: #252525; border-radius: 12px; padding: 30px; text-align: center; position: relative; overflow: hidden; border: 1px solid #333333;">
+                      <!-- Decorative elements -->
+                      <div style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(46,49,146,0.2) 0%, rgba(0,0,0,0) 70%);"></div>
+                      <div style="position: absolute; bottom: -30px; right: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(0,255,170,0.1) 0%, rgba(0,0,0,0) 70%);"></div>
+                      
+                      <p style="margin: 0 0 20px; color: #aaaaaa; font-size: 12px; text-transform: uppercase; letter-spacing: 3px;">Verification Code</p>
+                      
+                      <!-- OTP Display -->
+                      <div style="display: flex; justify-content: center; margin: 0 auto;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            ${otp
+                              .split("")
+                              .map(
+                                (digit, index) => `
+                              <td style="padding: 0 4px;">
+                                <div style="background-color: #2a2a2a; border: 1px solid ${index % 2 === 0 ? "#2e3192" : "#00ffaa"}; border-radius: 8px; padding: 15px 12px; font-family: 'Courier New', monospace; font-size: 28px; font-weight: bold; color: #ffffff; position: relative; overflow: hidden;">
+                                  <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, ${index % 2 === 0 ? "#2e3192" : "#00ffaa"}, transparent);"></div>
+                                  ${digit}
+                                </div>
+                              </td>
+                            `,
+                              )
+                              .join("")}
+                          </tr>
+                        </table>
+                      </div>
+                      
+                      <p style="margin: 25px 0 0; color: #aaaaaa; font-size: 14px;">
+                        Code expires in <span style="color: #00ffaa; font-weight: 600;">10:00</span> minutes
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Button Section -->
+          <tr>
+            <td style="padding: 0 30px 40px; text-align: center;">
+              <p style="margin: 0 0 20px; color: #aaaaaa; font-size: 14px;">
+                Having trouble? Contact our support team
+              </p>
+              <a href="#" style="display: inline-block; background: linear-gradient(90deg, #2e3192 0%, #00ffaa 100%); color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 30px; font-weight: 600; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">Get Help</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    
+    <!-- Footer -->
+    <tr>
+      <td style="padding: 40px 30px; text-align: center;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding: 0 0 20px;">
+              <!-- Social Media Icons -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                <tr>
+                  <td style="padding: 0 10px;">
+                    <a href="#" style="display: inline-block; width: 36px; height: 36px; background-color: #252525; border-radius: 50%; text-align: center; line-height: 36px; color: #00ffaa; text-decoration: none; font-size: 18px; border: 1px solid #333333;">
+                      <span style="color: #00ffaa;">f</span>
+                    </a>
+                  </td>
+                  <td style="padding: 0 10px;">
+                    <a href="#" style="display: inline-block; width: 36px; height: 36px; background-color: #252525; border-radius: 50%; text-align: center; line-height: 36px; color: #00ffaa; text-decoration: none; font-size: 18px; border: 1px solid #333333;">
+                      <span style="color: #00ffaa;">in</span>
+                    </a>
+                  </td>
+                  <td style="padding: 0 10px;">
+                    <a href="#" style="display: inline-block; width: 36px; height: 36px; background-color: #252525; border-radius: 50%; text-align: center; line-height: 36px; color: #00ffaa; text-decoration: none; font-size: 18px; border: 1px solid #333333;">
+                      <span style="color: #00ffaa;">t</span>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin: 0 0 5px; color: #aaaaaa; font-size: 14px;">
+                © ${new Date().getFullYear()} MakeIT. All rights reserved.
+              </p>
+              <p style="margin: 0; color: #666666; font-size: 12px;">
+                123 Tech Street, Innovation City, TC 12345
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`

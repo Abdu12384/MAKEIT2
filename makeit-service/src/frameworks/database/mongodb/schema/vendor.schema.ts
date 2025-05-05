@@ -63,6 +63,10 @@ export const VendorSchema =new Schema <IVendorModel>({
     rejectionReason:{
         type:String,
         required:false
+    },
+    aboutVendor:{
+        type: String,
+        required:false
     }
 },{
     timestamps:true

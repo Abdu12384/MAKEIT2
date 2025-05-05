@@ -20,7 +20,7 @@ export const Pagination1: React.FC<PaginationProps> = ({
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.3 }}>
 			<motion.button
-				className="bg-[var(--yellow)] text-white px-4 py-2 disabled:opacity-60 border-[1px] border-amber-600 rounded-md cursor-pointer"
+				className="bg-[var(--yellow)] text-red-500 px-4 py-2 disabled:opacity-60 border-[1px] border-amber-600 rounded-md cursor-pointer"
 				disabled={currentPage === 1}
 				onClick={onPagePrev}
 				whileHover={{ borderRadius: "999px" }}
@@ -36,7 +36,7 @@ export const Pagination1: React.FC<PaginationProps> = ({
 				Page {currentPage} of {totalPages}
 			</motion.span>
 			<motion.button
-				className="bg-[var(--yellow)] text-white px-4 py-2 disabled:opacity-60 border-[1px] border-amber-600 rounded-md cursor-pointer"
+				className="bg-[var(--yellow)] text-red-500 px-4 py-2 disabled:opacity-60 border-[1px] border-amber-600 rounded-md cursor-pointer"
 				disabled={currentPage === totalPages}
 				onClick={onPageNext}
 				whileHover={{ borderRadius: "999px" }}

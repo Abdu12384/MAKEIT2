@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
 import { IOtpEntity } from "../../../domain/entities/otp.entity.js";
-import { IOtpRepositroy } from "../../../domain/interface/repositoryInterfaces/services/otp-service.repository.js";
+import { IOtpRepositroy } from "../../../domain/interface/repositoryInterfaces/common-services/otp-service.repository.js";
 import { otpModel } from "../../../frameworks/database/mongodb/model/otp.model.js";
 
 

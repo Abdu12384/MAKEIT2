@@ -1,4 +1,4 @@
-import { adminLogin, logoutAdmin, updateUserStatus, updateVendorStatusById } from "@/services/admin/adminService";
+import { adminLogin, Category, createCategory, editCategory, getAllCategories, logoutAdmin, updateCategoryStatus, updateUserStatus, updateVendorStatusById } from "@/services/admin/adminService";
 import { FetchVendorParams, ForType, ILoginData } from "@/types/User";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllUsers, UserQueryParams } from "@/services/admin/adminService";
@@ -6,6 +6,14 @@ import { string } from "yup";
 import { IAllVendorResponse, IAxiosResponse } from "@/types/response";
 import { getAllVendors } from "@/services/admin/adminService";// update the path as needed
 
+
+
+
+interface QueryParams {
+  limit?: number;
+  page?: number;
+  search?: string;
+}
 
 
 
@@ -44,7 +52,6 @@ export const useUpdateUserStatusMutaiion = <T = IAxiosResponse>() =>{
 
 
 
-
 export const useAllVendorQueryMutation = (
 	queryFunc: (params: FetchVendorParams) => Promise<IAllVendorResponse>,
 	page: number,
@@ -68,8 +75,6 @@ export const useAllVendorQueryMutation = (
 
 
 
-
-
 export const useUpdateVendorStatusMutation = () => {
   const queryClient = useQueryClient();
 
@@ -79,6 +84,57 @@ export const useUpdateVendorStatusMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["vendors"] });
     },
   });
+};
+
+
+
+
+export const useCreateCategoryMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation<IAxiosResponse, Error, Category>({
+		mutationFn: createCategory,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["categories"] });
+		},
+	});
+};    
+
+
+
+
+export const useGetAllCategoriesQuery = (params: QueryParams) => {
+  return useQuery({
+    queryKey: ['categories', params],
+    queryFn: () => getAllCategories(params),
+  });
+};
+
+
+
+
+
+export const useUpdateCategoryStatusMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<IAxiosResponse, Error, { id: string; status: string; }>({
+    mutationFn: ({ id, status}) => updateCategoryStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+};    
+
+
+export const useEditCategoryMutation = () => {
+	const queryClient = useQueryClient();
+
+	 return useMutation<IAxiosResponse, Error, { id: string; description: string; title: string; }>({
+		mutationFn: ({ id, description,title}) => editCategory({data:{description,title},categoryId:id}),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["categories"] });
+		},
+	});   
 };
 
 

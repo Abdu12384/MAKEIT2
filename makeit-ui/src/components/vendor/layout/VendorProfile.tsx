@@ -14,7 +14,7 @@ import { useLogoutVendor } from "@/hooks/VendorCustomHooks";
 
 const VendorProfile = () => {
  const dispatch = useDispatch()
-  const { mutate: logout, isLoading } = useLogoutVendor();
+  const { mutate: logout } = useLogoutVendor();
 
 
 
@@ -33,7 +33,7 @@ const VendorProfile = () => {
 		});
 	};
 
-  const vendor = useSelector((state: RootState) => state.venodr.vendor);
+  const vendor = useSelector((state: RootState) => state.vendor.vendor);
   
 
   console.log(vendor)

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authController, blockStatusMiddleware, userController, vendorController } from "../../di/resolver.js";
+import { authController, blockStatusMiddleware, categoryController, userController, vendorController } from "../../di/resolver.js";
 import { authorizeRole, decodeToken, verifyAuth } from "../../../interfaceAdapters/middlewares/auth.middleware.js";
 export class AdminRoute {
     adminRoute;
@@ -35,6 +35,21 @@ export class AdminRoute {
         });
         this.adminRoute.get("/admin/refresh-session", verifyAuth, blockStatusMiddleware.checkStatus, (req, res) => {
             userController.refreshSession(req, res);
+        });
+        /** ==========================
+         *  Category Management Routes
+        * ========================== */
+        this.adminRoute.post('/admin/category', verifyAuth, authorizeRole(['admin']), blockStatusMiddleware.checkStatus, (req, res) => {
+            categoryController.createCategory(req, res);
+        });
+        this.adminRoute.get('/admin/category', verifyAuth, authorizeRole(['admin']), blockStatusMiddleware.checkStatus, (req, res) => {
+            categoryController.getAllCategories(req, res);
+        });
+        this.adminRoute.patch('/admin/category/:id', verifyAuth, authorizeRole(['admin']), blockStatusMiddleware.checkStatus, (req, res) => {
+            categoryController.updateCategoryStatus(req, res);
+        });
+        this.adminRoute.put('/admin/category/:id', verifyAuth, authorizeRole(['admin']), blockStatusMiddleware.checkStatus, (req, res) => {
+            categoryController.editCategory(req, res);
         });
         // logout
         // ---------

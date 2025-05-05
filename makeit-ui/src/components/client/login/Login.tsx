@@ -16,6 +16,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useClientGoogleLoginMutation } from "@/hooks/ClientCustomHooks"
 import { useDispatch } from "react-redux"
 import { clientLogin } from "@/store/slices/client.slice"
+import LottieAnimation from "@/utils/animations/loatiieLoading"
 
 
 
@@ -55,6 +56,7 @@ export function LoginComponent() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>(initialValues)
   const [formErrors, setFormErrors] = useState<FormErrors>({})
+  const [commonLoading, setCommonLoading] = useState(false)
   
   const navigate = useNavigate()
   const loginMutation = useClientLoginMutation()
@@ -96,8 +98,10 @@ export function LoginComponent() {
           },{
              onSuccess: (data) =>{
                 console.log('login sucess')
+                setCommonLoading(true)
                 window.setTimeout(() => {
                   dispatch(clientLogin(data.user as IClient))
+                  setCommonLoading(false)
                 }, 2000);
              },
              onError: (error) => {
@@ -123,8 +127,10 @@ export function LoginComponent() {
      console.log('user data',formData)
     loginMutation.mutate(formData,{
        onSuccess:(data) =>{
-        window.setTimeout(() => {
-          dispatch(clientLogin(data.user as IClient))
+         setCommonLoading(true)
+         window.setTimeout(() => {
+           dispatch(clientLogin(data.user as IClient))
+           setCommonLoading(false)
         }, 3000);
        },
        onError:(error:any)=>{
@@ -167,6 +173,7 @@ export function LoginComponent() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center h-[90vh]">
+      <LottieAnimation visible={commonLoading}/>
       <div className="w-full h-full bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="flex flex-col md:flex-row h-full">
           {/* Left side - Image (reversed from signup) */}

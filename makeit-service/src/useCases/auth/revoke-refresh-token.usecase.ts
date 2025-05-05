@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IRevokeRefreshTokenUseCase } from "../../domain/interface/useCaseInterface/auth/revok-refresh-token-usecase.interface";
-import { IRefreshTokenReposiory } from "../../domain/interface/repositoryInterfaces/services/refresh-token.entity";
+import { IRefreshTokenReposiory } from "../../domain/interface/repositoryInterfaces/common-services/refresh-token.entity";
 
 
 

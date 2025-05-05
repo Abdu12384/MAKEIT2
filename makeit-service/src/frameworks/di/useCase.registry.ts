@@ -37,9 +37,28 @@ import { IGetUserDetailsUseCase } from "../../domain/interface/useCaseInterface/
 import { GetUserDetailsUseCase } from "../../useCases/users/get-user-details.usecase.js";
 import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase.js";
 import { IBlackListTokenUseCase } from "../../domain/interface/useCaseInterface/auth/blacklist-token-usecase.interface.js";
-import { constants } from "buffer";
 import { IRevokeRefreshTokenUseCase } from "../../domain/interface/useCaseInterface/auth/revok-refresh-token-usecase.interface.js";
 import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase.js";
+import { IUpdateUserDetailsUseCase } from "../../domain/interface/useCaseInterface/users/update-user-details-usecase.interface.js";
+import { UpdateUserDetailsUseCase} from "../../useCases/users/update-user-details.usecase.js";
+import { IAddServiceUseCase } from "../../domain/interface/useCaseInterface/vendor/service/add-service-usecase.interface.js";
+import { AddServiceUseCase } from "../../useCases/vendor/service/add-service.usecase.js";
+import { IGetAllServicesUseCase } from "../../domain/interface/useCaseInterface/vendor/service/get-all-service-usecase.interface.js";
+import { GetAllServiceUseCase } from "../../useCases/vendor/service/get-all-service.usecase.js";
+import { ICategoryUseCase } from "../../domain/interface/useCaseInterface/admin/create-category-usecase.interface.js";
+import { CategoryUseCase } from "../../useCases/admin/create-category-usecase.js";
+import { IGetCategoryUseCase } from "../../domain/interface/useCaseInterface/admin/get-category-usecase.interface.js";
+import { GetAllCategoryUseCase } from "../../useCases/admin/get-all-category-usecase.js";
+import { IUpdateStatusCategoryUseCase } from "../../domain/interface/useCaseInterface/admin/update-category-usecase.interface.js";
+import { UpdateStatusCategoryUseCase } from "../../useCases/admin/update-category-usecase.js";
+import { IEditCategoryUseCase } from "../../domain/interface/useCaseInterface/admin/edit-category-usecase.interface.js";
+import { EditCategoryUseCase } from "../../useCases/admin/edit-category-usecase.js";
+import { IEditServiceUseCase } from "../../domain/interface/useCaseInterface/vendor/service/edit-service-usecase.interface.js";
+import { EditServiceUseCase } from "../../useCases/vendor/service/edit-service.usecase.js";
+import { IUpdateServiceStatusUseCase } from "../../domain/interface/useCaseInterface/vendor/service/update-service-status-usecase.interface.js";
+import { UpdateServiceStatusUseCase } from "../../useCases/vendor/service/update-status-service.usecase.js";
+import { IGetServiceByIdUseCase } from "../../domain/interface/useCaseInterface/vendor/service/get-service-by-id-usecase.interface.js";
+import { GetServiceByIdUseCase } from "../../useCases/vendor/service/get-service-by-id.usecase.js";
 
 
 
@@ -106,6 +125,47 @@ export class UseCaseRegistry {
      container.register<IRevokeRefreshTokenUseCase>("IRevokeRefreshTokenUseCase",{
       useClass: RevokeRefreshTokenUseCase
      })
+
+     container.register<IUpdateUserDetailsUseCase>("IUpdateUserDetailsUseCase",{
+      useClass: UpdateUserDetailsUseCase
+     })
+
+     container.register<IAddServiceUseCase>("IAddServiceUseCase",{
+      useClass: AddServiceUseCase
+     })
+
+     container.register<IGetAllServicesUseCase>("IGetAllServicesUseCase",{
+      useClass: GetAllServiceUseCase
+     })
+
+     container.register<ICategoryUseCase>("ICategoryUseCase",{
+      useClass: CategoryUseCase
+     })
+
+     container.register<IGetCategoryUseCase>("IGetCategoryUseCase",{
+      useClass: GetAllCategoryUseCase
+     }) 
+
+     container.register<IUpdateStatusCategoryUseCase>("IUpdateStatusCategoryUseCase",{
+      useClass: UpdateStatusCategoryUseCase
+     })    
+
+     container.register<IEditCategoryUseCase>("IEditCategoryUseCase",{
+      useClass: EditCategoryUseCase
+     })     
+
+
+     container.register<IEditServiceUseCase>("IEditServiceUseCase",{
+      useClass: EditServiceUseCase
+     }) 
+
+     container.register<IUpdateServiceStatusUseCase>("IUpdateServiceStatusUseCase",{
+      useClass: UpdateServiceStatusUseCase
+     })   
+
+     container.register<IGetServiceByIdUseCase>("IGetServiceByIdUseCase",{
+      useClass: GetServiceByIdUseCase
+     }) 
 
    //======================= Register Bycripts =======================//
 

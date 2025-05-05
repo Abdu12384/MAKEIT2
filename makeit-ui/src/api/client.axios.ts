@@ -1,4 +1,6 @@
 
+import { clientLogout } from "@/store/slices/client.slice";
+import { store } from "@/store/store";
 import axios from "axios";
 import toast from "react-hot-toast";
 // import { store } from "@/store/store";
@@ -27,9 +29,9 @@ clientAxiosInstance.interceptors.response.use(
 				} catch (refreshError) {
 					isRefreshing = false;
 
-					// store.dispatch(clientLogout());
+					store.dispatch(clientLogout());
 
-					// window.location.href = "/";
+					window.location.href = "/";
 					toast("Please login again");
 					return Promise.reject(refreshError);
 				}
